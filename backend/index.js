@@ -3,6 +3,8 @@ import morgan from 'morgan';
 import dotenv from 'dotenv'
 import { dbConfig } from './utils/dbConfig.js';
 import cors from 'cors';
+import userRouter from './routes/UserRoutes.js';
+import itemRouter from './routes/ItemRoutes.js';
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -16,7 +18,9 @@ app.get('/', async (req,res)=>{
 })
 
 //Admin Routes
-// app.use('/admin',adminRouter);
+app.use('/user',userRouter);
+//Item Routes
+app.use('/item',itemRouter);
 
 dbConfig().then(()=>{
     app.listen(port,()=>{
