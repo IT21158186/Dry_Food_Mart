@@ -1,24 +1,104 @@
+import { AuthProvider } from './pages/common/AuthContext'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Landing from '../src/pages/Landing';
-import Login from './pages/CusLogin';
-import Signup from './pages/CusSignup';
-import TopNav from './pages/common/TopNav';
-import Home from './pages/Home';
-import InventoryManagementDashboard from './pages/managers/InventoryManagementDashboard';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Login from './pages/common/Login'
+import Signup from './pages/common/Signup'
+import NotFound from './pages/common/NotFound'
+import Dashboard from './pages/common/Dashboard';
+import UserProfile from './pages/common/UserProfile';
 
-function App() {
+
+import Guest from './pages/guest/Guest';
+import GuestItems from './pages/guest/Items';
+import GuestHotdeals from './pages/guest/Hotdeals';
+import GuestReview from './pages/guest/Review';
+
+import CustomerCart from './pages/customer/Cart';
+import CustomerOrders from './pages/customer/Orders';
+import CustomerStore from './pages/customer/Store';
+
+import SupplierHome from './pages/SupplierManager/Home';
+
+import InventoryHome from './pages/InventoryManager/Home';
+
+import OrderHome from './pages/OrderManager/Home';
+
+import Home from './pages/admin/Home';
+import ManageUsers from './pages/admin/ManageUsers';
+import Newsfeed from './pages/guest/Newsfeed';
+
+import NewsHome from './pages/NewsManager/Home';
+import InventoryAddItems from './pages/InventoryManager/AddItems';
+import ManageNewsFeed from './pages/admin/ManageNewsFeed';
+
+export default function App() {
   return (
     <BrowserRouter>
-      <TopNav /> {/* Render TopNav outside the Routes */}
-      <Routes>
-        <Route path='/' element={<Landing />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/home' element={<Home />} />
-        <Route path='/inventory' element={<InventoryManagementDashboard />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
+      <ToastContainer autoClose={1000} />
+      <AuthProvider>
+        <Routes>
+          <Route path='*' element={<NotFound />} />
+          <Route path='/' element={<Dashboard />}>
+            <Route path='/' element={<Guest />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/signup' element={<Signup />} />
+          </Route>
 
-export default App;
+          <Route path='' element={<Dashboard />}>
+            <Route path='' element={<Guest />} />
+            <Route path='items' element={<GuestItems />} />
+            <Route path='review' element={<GuestReview />} />
+            <Route path='hotdeals' element={<GuestHotdeals />} />
+            <Route path='newsfeed' element={<Newsfeed />} />
+          </Route>
+
+          <Route path='/admin' element={<Dashboard />}>
+            <Route path='' element={<Home />} />
+            <Route path='home' element={<Home />} />
+            <Route path='profile' element={<UserProfile />} />
+            <Route path='managers' element={<ManageUsers />} />
+            <Route path='newsMng' element={<ManageNewsFeed />} />
+          </Route>
+
+          <Route path='/customer' element={<Dashboard />}>
+            <Route path='' element={<Guest />} />
+            <Route path='home' element={<Guest />} />
+            <Route path='cart' element={<CustomerCart />} />
+            <Route path='orders' element={<CustomerOrders />} />
+            <Route path='store' element={<GuestItems />} />
+            <Route path='profile' element={<UserProfile />} />
+            <Route path='review' element={<GuestReview />} />
+            <Route path='newsfeed' element={<Newsfeed />} />
+          </Route>
+
+          <Route path='/inventory' element={<Dashboard />}>
+            <Route path='' element={<InventoryHome />} />
+            <Route path='home' element={<InventoryHome />} />
+            <Route path='add-item' element={<InventoryAddItems />} />
+            <Route path='profile' element={<UserProfile />} />
+          </Route>
+
+          <Route path='/order' element={<Dashboard />}>
+            <Route path='' element={<OrderHome />} />
+            <Route path='home' element={<OrderHome />} />
+            <Route path='profile' element={<UserProfile />} />
+          </Route>
+
+          <Route path='/supplier' element={<Dashboard />}>
+            <Route path='' element={<SupplierHome />} />
+            <Route path='home' element={<SupplierHome />} />
+            <Route path='profile' element={<UserProfile />} />
+          </Route>
+
+          <Route path='/news' element={<Dashboard />}>
+            <Route path='' element={<NewsHome />} />
+            <Route path='home' element={<NewsHome />} />
+            <Route path='profile' element={<UserProfile />} />
+          </Route>
+        </Routes>
+        {/* <StickyFooter /> */}
+      </AuthProvider>
+    </BrowserRouter>
+  )
+}

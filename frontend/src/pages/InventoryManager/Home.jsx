@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import WelcomeCardInventory from '../../components/welcomeCards/WelcomeCardsInventory';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import { Link } from 'react-router-dom';
 
 function createData(name, category, quantity, price, image) {
   return { name, category, quantity, price, image };
@@ -25,7 +26,7 @@ const rows = [
   createData('Gingerbread', 'Dessert', 356, 16.0, 3.9),
 ];
 
-const InventoryManagementDashboard = () => {
+const Home = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,9 +67,9 @@ const InventoryManagementDashboard = () => {
         <IconButton sx={{ p: '10px', marginRight: 2 }} aria-label="search">
           <SearchIcon />
         </IconButton>
-        <Button variant="outlined" color="success">
-          Add Item
-        </Button>
+        <Button variant="outlined" color="success" component={Link} to="add-item">
+      Add Item
+    </Button>
       </Box>
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         <TableContainer sx={{ maxHeight: '100%' }}>
@@ -124,4 +125,4 @@ const InventoryManagementDashboard = () => {
   );
 };
 
-export default InventoryManagementDashboard;
+export default Home;
