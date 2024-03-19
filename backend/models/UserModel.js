@@ -13,7 +13,6 @@ const UserSchema = new mongoose.Schema({
     },
     address: {
         type: String,
-        default: 'Not Given'
     },
     email: {
         type: String,
@@ -25,10 +24,9 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["admin", "customer", ""],
+        enum: ["admin", "customer","supplier","inventory", "order", "news",""],
     },
 }, { timestamps: true });
-
 
 //Encrypt the password before saving the document
 UserSchema.pre("save", async function (next) {
