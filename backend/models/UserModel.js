@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const UserSchema = new mongoose.Schema({
     firstName: {
@@ -12,7 +13,6 @@ const UserSchema = new mongoose.Schema({
     },
     address: {
         type: String,
-        default: 'Not Given'
     },
     email: {
         type: String,
@@ -24,9 +24,24 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["customer", "teacher", "parent", "admin", "support", ""],
-    }
+        enum: ["admin", "customer","supplier","inventory", "order", "news",""],
+    },
 }, { timestamps: true });
+
+//Encrypt the password before saving the document
+UserSchema.pre("save", async function (next) {
+    if (!this.isModified('password')) {
+        next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+});
+
+//Password compare method
+UserSchema.methods.isPasswordMatched = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+}
+
 
 const UserModel = mongoose.model("users", UserSchema);
 
