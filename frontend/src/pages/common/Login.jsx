@@ -56,10 +56,18 @@ export default function Login() {
             toast.success('Login Success as a Customer')
             navigate('/customer/home');
             break;
-            case 'news': //news
-              toast.success('Login Success as a News Manager')
-              navigate('/news/home');
-              break;
+          case 'news': //news
+            toast.success('Login Success as a News Manager')
+            navigate('/news/home');
+            break;
+          case 'delivery': //delivery
+            toast.success('Login Success as a Delivery Manager')
+            navigate('/delivery/home');
+            break;
+          case 'driver': //delivery
+            toast.success('Login Success as a Driver')
+            navigate('/driver/home');
+            break;
         }
         window.location.reload();
       }

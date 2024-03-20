@@ -20,7 +20,7 @@ import authAxios from '../../utils/authAxios';
 import { apiUrl } from '../../utils/Constants';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
-import { adminListItems, customerListItems, guestListItems, inventoryListItems, newsListItems, orderListItems, supplierListItems } from '../../components/listItems';
+import { deliveryListItems, adminListItems, customerListItems, guestListItems, inventoryListItems, newsListItems, orderListItems, supplierListItems, driverListItems } from '../../components/listItems';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
@@ -169,13 +169,27 @@ export default function Dashboard() {
         }
         setNavlinks(supplierListItems);
         break;
-        case "news": //Support
-          if (userAPI != null) {
-            setuserAPI('news')
-            setAuth(true);
-          }
-          setNavlinks(newsListItems);
-          break;
+      case "news": //Support
+        if (userAPI != null) {
+          setuserAPI('news')
+          setAuth(true);
+        }
+        setNavlinks(newsListItems);
+        break;
+      case "delivery": //Support
+        if (userAPI != null) {
+          setuserAPI('delivery')
+          setAuth(true);
+        }
+        setNavlinks(deliveryListItems);
+        break;
+      case "driver": //driver
+        if (userAPI != null) {
+          setuserAPI('driver')
+          setAuth(true);
+        }
+        setNavlinks(driverListItems);
+        break;
       default:
         setNavlinks(guestListItems)
         navigate("/");
@@ -232,12 +246,13 @@ export default function Dashboard() {
               sx={{ flexGrow: 1 }}
             >
               {userRole === 'admin' ? 'Admin Dashboard' :
-               userRole === 'supplier' ? 'Supplier Manager Dashboard' :
-               userRole === 'inventory' ? 'Inventory Manager Dashboard' :
-               userRole === 'supplier' ? 'Supplier Manager Dashboard' :
-               userRole === 'news' ? 'News Manager Dashboard' :
-               userRole === 'order' ? 'Order Manager Dashboard' :
-                'Crisp Cabinet'}
+                userRole === 'supplier' ? 'Supplier Manager Dashboard' :
+                  userRole === 'inventory' ? 'Inventory Manager Dashboard' :
+                    userRole === 'supplier' ? 'Supplier Manager Dashboard' :
+                      userRole === 'news' ? 'News Manager Dashboard' :
+                        userRole === 'delivery' ? 'Delivery Manager Dashboard' :
+                          userRole === 'order' ? 'Order Manager Dashboard' :
+                            'Crisp Cabinet'}
             </Typography>
 
             {auth ? (

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
@@ -23,7 +22,6 @@ const Signup = () => {
         const payload = {
             email: data.get('email'),
             password: data.get('password'),
-            address: data.get('address'),
             contactNo: data.get('contactNo'),
             firstName: data.get('firstName'),
             lastName: data.get('lastName'),
@@ -105,17 +103,6 @@ const Signup = () => {
                                     fullWidth
                                     id="contactNo"
                                     label="Phone"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    multiline
-                                    rows={4}
-                                    required
-                                    fullWidth
-                                    id="address"
-                                    label="Address"
-                                    name="address"
                                 />
                             </Grid>
                             <Grid item xs={12}>
