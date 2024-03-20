@@ -1,15 +1,16 @@
 import { createContext, useReducer, useContext } from "react";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
 
-  const state = [ 
+  const state = [
     {
       title: 'biscuit',
       image: "https://sallysbakingaddiction.com/wp-content/uploads/2013/02/peanut-butter-chocolate-swirl-cookies-2.jpg",
       quantity: "2",
       price: "650",
     }
-   ] 
+  ]
 
   const total = state.reduce((total, item) => {
     return total + item.price * item.quantity;
@@ -92,7 +93,12 @@ const Cart = () => {
                     <p class="text-sm text-gray-700">including VAT</p>
                   </div>
                 </div>
-                <button class="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">Check out</button>
+
+                <Link to="/customer/checkout">
+                  <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">
+                    Check out
+                  </button>
+                </Link>
               </>
             </div>
           )}
