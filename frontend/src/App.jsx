@@ -37,6 +37,7 @@ import DriverHome from './pages/Driver/Home';
 
 import StoreItems from './pages/store/Items';
 import ItemPage from './pages/store/ItemPage';
+import AddDriver from './pages/DeliveryManager/AddDriver';
 
 
 export default function App() {
@@ -110,6 +111,7 @@ export default function App() {
             <Route path='' element={<DelveryHome />} />
             <Route path='home' element={<DelveryHome />} />
             <Route path='profile' element={<UserProfile />} />
+            <Route path='/delivery/addDriver' element={<AddDriver />} />
           </Route>
 
           <Route path='/driver' element={<Dashboard />}>
