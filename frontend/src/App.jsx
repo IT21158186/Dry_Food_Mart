@@ -38,6 +38,8 @@ import DriverHome from './pages/Driver/Home';
 import StoreItems from './pages/store/Items';
 import ItemPage from './pages/store/ItemPage';
 
+import Checkout from './pages/customer/Checkout';
+
 
 export default function App() {
   return (
@@ -79,6 +81,7 @@ export default function App() {
             <Route path='review' element={<GuestReview />} />
             <Route path='newsfeed' element={<Newsfeed />} />
             <Route path='itempage' element={<ItemPage />} />
+            <Route path='checkout' element={<Checkout />} />
           </Route>
 
           <Route path='/inventory' element={<Dashboard />}>
