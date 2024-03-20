@@ -142,6 +142,32 @@ export const newsListItems = (
   </React.Fragment>
 );
 
+export const deliveryListItems = (
+  <React.Fragment>
+  <Link to={'/delivery'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <Home />
+      </ListItemIcon>
+      <ListItemText primary="Home" />
+    </ListItemButton>
+  </Link>
+  </React.Fragment>
+);
+
+export const driverListItems = (
+  <React.Fragment>
+  <Link to={'/driver'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <Home />
+      </ListItemIcon>
+      <ListItemText primary="Home" />
+    </ListItemButton>
+  </Link>
+  </React.Fragment>
+);
+
 export const guestListItems = (
   <React.Fragment>
   <Link to={''}>

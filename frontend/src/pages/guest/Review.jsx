@@ -5,12 +5,14 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Rating from '@mui/material/Rating';
-import { Button, TextField } from '@mui/material';
+import { Button, CardActions, IconButton, TextField } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useAuth } from '../common/AuthContext';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Review() {
   const [expanded, setExpanded] = React.useState(false);
@@ -32,7 +34,7 @@ export default function Review() {
 
   return (
     <div>
-      
+
       <Typography variant="h4" gutterBottom className='text-center'>
         Review & Feedback
       </Typography>
@@ -58,7 +60,9 @@ export default function Review() {
           {"Publish Review"}
         </DialogTitle>
         <DialogContent>
-          <TextField fullWidth label="Name" id="name" />
+          
+        <Typography component="legend">Email</Typography>
+          <TextField fullWidth value={'Sample@mail.com'} id="email" disabled/>
 
           <Typography component="legend">Rate</Typography>
           <Rating
@@ -70,13 +74,13 @@ export default function Review() {
           />
 
           <Typography component="legend">Feedback</Typography>
-          
-        <TextField
-          id="outlined-multiline-static"
-          multiline
-          rows={4}
-          fullWidth
-        />
+
+          <TextField
+            id="outlined-multiline-static"
+            multiline
+            rows={4}
+            fullWidth
+          />
 
         </DialogContent>
 
@@ -104,24 +108,14 @@ export default function Review() {
             Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
             Aliquam eget maximus est, id dignissim quam.
           </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            General settings
-          </Typography>
-          <Rating name="disabled" value={value} disabled />
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-            Aliquam eget maximus est, id dignissim quam.
-          </Typography>
+          <div disableSpacing className='text-right'>
+            <IconButton aria-label="add to favorites">
+              <EditIcon />
+            </IconButton>
+            <IconButton aria-label="share">
+              <DeleteIcon />
+            </IconButton>
+          </div>
         </AccordionDetails>
       </Accordion>
     </div>

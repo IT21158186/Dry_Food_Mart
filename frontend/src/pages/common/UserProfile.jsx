@@ -11,6 +11,8 @@ import { apiUrl } from '../../utils/Constants';
 import { toast } from 'react-toastify';
 import { stringAvatar } from './Dashboard'
 import Loader from '../../components/Loader/Loader';
+import { useAuth } from '../common/AuthContext';
+
 // Use Tailwind CSS classes
 const CenteredContainer = styled(Grid)(({ theme }) => ({
   display: 'flex',
@@ -28,6 +30,7 @@ const ProfilePaper = styled(Paper)(({ theme }) => ({
 // React functional component
 const UserProfile = () => {
 
+  const { userRole } = useAuth();
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -82,12 +85,17 @@ const UserProfile = () => {
               </Typography>
 
               {/* Phone Number */}
-              <Typography variant="body1" sx={{ marginBottom: 3 }}>
+              <Typography variant="body1" sx={{ marginBottom: 2 }}>
                 <span style={{ fontWeight: 'bold', color: '#444' }}>Create Date:</span> {user.createdAt}
               </Typography>
+              {userRole === 'customer' && (
+                <div>
+                  <Button color='success'>Add Address</Button>
+                </div>
+              )}
               <div>
                 <Button>Edit</Button>
-                <Button>Delete</Button>
+                <Button color='error'>Delete</Button>
               </div>
             </ProfilePaper>
           </Grid>

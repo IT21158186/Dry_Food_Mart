@@ -11,9 +11,6 @@ const UserSchema = new mongoose.Schema({
     contactNo: {
         type: Number,
     },
-    address: {
-        type: String,
-    },
     email: {
         type: String,
         required: true,
@@ -24,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["admin", "customer","supplier","inventory", "order", "news",""],
+        enum: ["admin", "customer","supplier","inventory", "order", "news", "delivery", "driver",""],
     },
 }, { timestamps: true });
 

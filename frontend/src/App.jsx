@@ -10,7 +10,6 @@ import UserProfile from './pages/common/UserProfile';
 
 
 import Guest from './pages/guest/Guest';
-import GuestItems from './pages/guest/Items';
 import GuestHotdeals from './pages/guest/Hotdeals';
 import GuestReview from './pages/guest/Review';
 
@@ -32,6 +31,14 @@ import NewsHome from './pages/NewsManager/Home';
 import InventoryAddItems from './pages/InventoryManager/AddItems';
 import ManageNewsFeed from './pages/admin/ManageNewsFeed';
 
+import DelveryHome from './pages/DeliveryManager/Home';
+
+import DriverHome from './pages/Driver/Home';
+
+import StoreItems from './pages/store/Items';
+import ItemPage from './pages/store/ItemPage';
+
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -47,10 +54,11 @@ export default function App() {
 
           <Route path='' element={<Dashboard />}>
             <Route path='' element={<Guest />} />
-            <Route path='items' element={<GuestItems />} />
+            <Route path='items' element={<StoreItems />} />
             <Route path='review' element={<GuestReview />} />
             <Route path='hotdeals' element={<GuestHotdeals />} />
             <Route path='newsfeed' element={<Newsfeed />} />
+            <Route path='itempage' element={<ItemPage />} />
           </Route>
 
           <Route path='/admin' element={<Dashboard />}>
@@ -66,10 +74,11 @@ export default function App() {
             <Route path='home' element={<Guest />} />
             <Route path='cart' element={<CustomerCart />} />
             <Route path='orders' element={<CustomerOrders />} />
-            <Route path='store' element={<GuestItems />} />
+            <Route path='store' element={<StoreItems />} />
             <Route path='profile' element={<UserProfile />} />
             <Route path='review' element={<GuestReview />} />
             <Route path='newsfeed' element={<Newsfeed />} />
+            <Route path='itempage' element={<ItemPage />} />
           </Route>
 
           <Route path='/inventory' element={<Dashboard />}>
@@ -94,6 +103,18 @@ export default function App() {
           <Route path='/news' element={<Dashboard />}>
             <Route path='' element={<NewsHome />} />
             <Route path='home' element={<NewsHome />} />
+            <Route path='profile' element={<UserProfile />} />
+          </Route>
+
+          <Route path='/delivery' element={<Dashboard />}>
+            <Route path='' element={<DelveryHome />} />
+            <Route path='home' element={<DelveryHome />} />
+            <Route path='profile' element={<UserProfile />} />
+          </Route>
+
+          <Route path='/driver' element={<Dashboard />}>
+            <Route path='' element={<DriverHome />} />
+            <Route path='home' element={<DriverHome />} />
             <Route path='profile' element={<UserProfile />} />
           </Route>
         </Routes>
