@@ -84,16 +84,16 @@ export default function InventoryAddItems() {
 
             </form>
 
-<br></br>
-<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-    <Button style={{ backgroundColor: '#4CAF50', color: 'white', marginRight: '8px' }} variant="contained" fullWidth>
-        Add
-    </Button>
-    <div style={{ width: '8px' }}></div> {/* This adds space between buttons */}
-    <Button style={{ backgroundColor: '#f44336', color: 'white' }} variant="contained" fullWidth component={Link} to="/inventory">
-        Cancel
-    </Button>
-</div>
+            <br></br>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button style={{ backgroundColor: '#4CAF50', color: 'white', marginRight: '8px' }} variant="contained" fullWidth>
+                    Add
+                </Button>
+                <div style={{ width: '8px' }}></div> {/* This adds space between buttons */}
+                <Button style={{ backgroundColor: '#f44336', color: 'white' }} variant="contained" fullWidth component={Link} to="/inventory">
+                    Cancel
+                </Button>
+            </div>
 
 
 

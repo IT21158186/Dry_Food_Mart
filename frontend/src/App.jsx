@@ -86,9 +86,9 @@ export default function App() {
           </Route>
 
           <Route path='/inventory' element={<Dashboard />}>
+          <Route path='add-item' element={<InventoryAddItems />} />
             <Route path='' element={<InventoryHome />} />
             <Route path='home' element={<InventoryHome />} />
-            <Route path='add-item' element={<InventoryAddItems />} />
             <Route path='profile' element={<UserProfile />} />
           </Route>
 
