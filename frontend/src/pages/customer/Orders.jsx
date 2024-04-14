@@ -1,7 +1,45 @@
 import { Cancel } from '@material-ui/icons'
-import React from 'react'
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { apiUrl } from "../../utils/Constants";
+import authAxios from "../../utils/authAxios";
+import { toast } from "react-toastify";
 
 export default function Orders() {
+
+  const [orders, setOrders] = useState([]);
+
+  const getOrders = async () => {
+    try {
+      const res = await authAxios.get(`${apiUrl}/order`);
+      setOrders(res.data);
+      console.log(orders) // Directly set favorites to the array of favorites
+    } catch (error) {
+      console.error(error);
+      if (error.response && error.response.status === 404) {
+        toast.error('Orders is Empty');
+      } else {
+        toast.error(error.response?.data?.message || 'An error occurred');
+      }
+    }
+  };
+
+  const removeOrder = async (itemId) => {
+    try {
+        const result = await authAxios.delete(`${apiUrl}/order/${itemId}`);
+        if (result) {
+          toast.success("Removed");
+          getOrders();
+        }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    getOrders();
+  }, []);
+
   return (
     <div class="bg-white p-8 rounded-md w-full">
       <div class=" flex items-center justify-between pb-6">
@@ -19,10 +57,6 @@ export default function Orders() {
             </svg>
             <input class="bg-gray-50 outline-none ml-1 block " type="text" name="" id="" placeholder="search..." />
           </div>
-          {/* <div class="lg:ml-40 ml-10 space-x-8">
-            <button class="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">New Report</button>
-            <button class="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">Create</button>
-          </div> */}
         </div>
       </div>
       <div>
@@ -33,7 +67,7 @@ export default function Orders() {
                 <tr>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Product
+                    Id
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -53,51 +87,50 @@ export default function Orders() {
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <div class="flex items-center">
-                      <div class="flex-shrink-0 w-10 h-10">
-                        <img class="w-full h-full rounded-full"
-                          src="https://coho.lk/cdn/shop/files/2C.jpg?v=1696089790"
-                          alt="" />
-                      </div>
-                      <div class="ml-3">
+              {orders.map((orders, index) => {
+                return (
+                  <tbody>
+                    <tr>
+                      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <div class="flex items-center">
+                          <div class="ml-3">
+                            <p class="text-gray-900 whitespace-no-wrap">
+                              {orders._id}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p class="text-gray-900 whitespace-no-wrap">
-                        Chocolate Chip
+                          {orders.updatedAt}
                         </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">
-                      Jan 21, 2024
-                    </p>
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">
-                      700.00
-                    </p>
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <span
-                      class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                      <span aria-hidden
-                        class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                      <span class="relative">Active</span>
-                    </span>
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    <span
-                      class="relative inline-block px-3 py-1 font-semibold text-red-600 leading-tight">
-                      <span aria-hidden
-                        class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                      <span class="relative"> <Cancel /></span>
-                    </span>
-                  </td>
-                </tr>
-                
-              </tbody>
+                      </td>
+                      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <p class="text-gray-900 whitespace-no-wrap">
+                          {orders.price}
+                        </p>
+                      </td>
+                      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <span
+                          class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                          <span aria-hidden
+                            class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                          <span class="relative">{orders.status}</span>
+                        </span>
+                      </td>
+                      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <span
+                          class="relative inline-block px-3 py-1 font-semibold text-red-600 leading-tight">
+                          <span aria-hidden
+                            class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                          <span class="relative" onClick={() => {removeOrder(orders._id)}}> <Cancel/></span>
+                        </span>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                )
+              })}
             </table>
           </div>
         </div>
