@@ -61,7 +61,7 @@ export default function App() {
             <Route path='review' element={<GuestReview />} />
             <Route path='hotdeals' element={<GuestHotdeals />} />
             <Route path='newsfeed' element={<Newsfeed />} />
-            <Route path='itempage' element={<ItemPage />} />
+            <Route path='itempage/:id' element={<ItemPage />} />
           </Route>
 
           <Route path='/admin' element={<Dashboard />}>
@@ -81,7 +81,7 @@ export default function App() {
             <Route path='profile' element={<UserProfile />} />
             <Route path='review' element={<GuestReview />} />
             <Route path='newsfeed' element={<Newsfeed />} />
-            <Route path='itempage' element={<ItemPage />} />
+            <Route path='itempage/:id' element={<ItemPage />} />
             <Route path='checkout' element={<Checkout />} />
           </Route>
 

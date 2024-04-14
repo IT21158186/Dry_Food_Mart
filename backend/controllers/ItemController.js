@@ -31,6 +31,18 @@ export const getAllProducts = async (req, res) => {
     }
 }
 
+export const getOne = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const Products = await ItemModel.findById(id)
+        res.status(200).json(Products);
+    } catch (error) {
+        res.status(500).json({
+            message: error.mesasge
+        })
+    }
+}
+
 export const deleteProduct = async (req, res) => {
     try {
         const id = req.params.id;

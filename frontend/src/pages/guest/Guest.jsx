@@ -1,17 +1,47 @@
-import React from 'react';
-import MediaCard from '../../components/MediaCard';
+import React, { useEffect, useState } from 'react'
+import authAxios from '../../utils/authAxios';
+import { apiUrl } from '../../utils/Constants';
+import { toast } from 'react-toastify';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Carasoul } from '../../components/Carasoul';
 import Divider from '@mui/material/Divider';
+import { useNavigate } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Loader from '../../components/Loader/Loader';
 
 export default function Guest() {
-    // Generate an array to render MediaCard components multiple times
-    const mediaCards = Array.from({ length: 4 }, (_, index) => (
-        <div key={index} style={{ margin: '10px' }}>
-            <MediaCard />
-        </div>
-    ));
+
+    const [allItems, setAllItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
+
+    const getItems = async () => {
+        try {
+            const res = await authAxios.get(`${apiUrl}/item/all-products`);
+
+            res.data.forEach(item => {
+                if (allItems.length < 4 && allItems.length < res.data.length) {
+                    allItems.push(item);
+                }
+            });
+
+            setIsLoading(false);
+        } catch (error) {
+            console.error(error);
+            if (error.response && error.response.status === 404) {
+                toast.error('Products not found');
+            } else {
+                toast.error(error.response?.data?.message || 'An error occurred');
+            }
+        }
+    };
+
+    useEffect(() => {
+        getItems();
+    }, []);
 
     return (
         <Container>
@@ -19,7 +49,7 @@ export default function Guest() {
                 <Carasoul />
             </div>
             <Divider />
-            
+
             <Divider />
             <Typography variant="h4" gutterBottom style={{ textAlign: 'center', marginTop: '20px', fontWeight: 'bold', color: '#434747' }}>
                 Top Selling Products
@@ -27,8 +57,29 @@ export default function Guest() {
 
             {/* Container for MediaCard components */}
             <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                {/* Render MediaCard components */}
-                {mediaCards}
+                {
+                    !isLoading ? <>
+                        {/* Render MediaCard components */}
+                        {allItems.map((row, index) => (
+                            <div key={index} style={{ margin: '10px' }}>
+                                <Card sx={{ width: 200, height: 200 }} onClick={() => navigate(`/itempage/${row._id}`)} style={{ cursor: 'pointer' }}>
+                                    <CardMedia
+                                        sx={{ height: 100 }}
+                                        image={row.img}
+                                        title={row.itemName}
+                                    />
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {row.itemName}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Rs. {row.price}.00
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        ))}
+                    </> : <Loader />}
             </div>
 
             {/* View More Button */}
@@ -38,7 +89,7 @@ export default function Guest() {
                 </button>
             </div>
             <hr></hr>
-            
+
             <Typography variant="h5" gutterBottom style={{ textAlign: 'center', marginTop: '20px', fontWeight: 'bold', color: '#434747' }}>
                 About Us
             </Typography>

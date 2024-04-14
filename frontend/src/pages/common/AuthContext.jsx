@@ -2,8 +2,6 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Alert from '@mui/material/Alert';
-import CheckIcon from '@mui/icons-material/Check';
 
 const AuthContext = createContext();
 

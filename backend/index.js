@@ -5,6 +5,10 @@ import { dbConfig } from './utils/dbConfig.js';
 import cors from 'cors';
 import userRouter from './routes/UserRoutes.js';
 import itemRouter from './routes/ItemRoutes.js';
+import favoruteRouter from './routes/FavoriteRoutes.js';
+import cartRouter from './routes/CartRoutes.js';
+import orderRouter from './routes/OrderRoutes.js';
+import reviewRouter from './routes/ReviewRoutes.js';
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -18,9 +22,17 @@ app.get('/', async (req,res)=>{
 })
 
 //Admin Routes
-app.use('/user',userRouter);
+app.use('/user', userRouter);
 //Item Routes
-app.use('/item',itemRouter);
+app.use('/item', itemRouter);
+//favorite Routes
+app.use('/favorite', favoruteRouter);
+//cart Routes
+app.use('/cart', cartRouter);
+//order Routes
+app.use('/order', orderRouter);
+//review Routes
+app.use('/review', reviewRouter);
 
 dbConfig().then(()=>{
     app.listen(port,()=>{
