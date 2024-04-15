@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'
 import { Box, Container, Typography, Paper } from '@mui/material';
 import { format } from 'date-fns';
 import Button from '@mui/material/Button';
@@ -11,6 +11,9 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import authAxios from '../../utils/authAxios';
+import { apiUrl } from '../../utils/Constants';
+import { toast } from 'react-toastify';
 
 function createData(id, title, pubDate, pubTime, status) {
     return { id, title, pubDate, pubTime, status };
@@ -27,7 +30,27 @@ const rows = [
 const ManageNewsFeed = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [news, setNews] = useState([]);
+
+    const getNews = async () => {
+        try {
+            const res = await authAxios.get(`${apiUrl}/news`);
+            setNews(res.data);
+            console.log(res.data)
+        } catch (error) {
+            console.error(error);
+            if (error.response && error.response.status === 404) {
+                toast.error('Products not found');
+            } else {
+                toast.error(error.response?.data?.message || 'An error occurred');
+            }
+        }
+    };
+
+    useEffect(() => {
+        getNews();
+    }, []);
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -38,19 +61,17 @@ const ManageNewsFeed = () => {
         setPage(0);
     };
 
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            const result = await authAxios.put(`${apiUrl}/news/${id}`, { status: newStatus });
+            if (result) {
+                getNews();
+                toast.success('Updated Successfully');
+            }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
     };
-
-    const filteredRows = rows.filter((row) =>
-        row.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const handleStatusChange = (index, newStatus) => {
-        const updatedRows = [...rows];
-        updatedRows[index].status = newStatus;
-        setRows(updatedRows);
-      };
 
     const [regUsers] = useState(100); // Example value
     const [staff] = useState(20); // Example value
@@ -148,30 +169,28 @@ const ManageNewsFeed = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {filteredRows
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row, index) => (
-                                        <TableRow
-                                            key={row.id}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell align="center">{row.id}</TableCell>
-                                            <TableCell align="center">{row.title}</TableCell>
-                                            <TableCell align="center">{row.pubDate}</TableCell>
-                                            <TableCell align="center">{row.pubTime}</TableCell>
-                                            <TableCell align="center">
-                                                <ToggleButtonGroup
-                                                    value={row.status}
-                                                    exclusive
-                                                    onChange={(event, newStatus) => handleStatusChange(index, newStatus)}
-                                                    aria-label="status"
-                                                >
-                                                    <ToggleButton value="pending">Pending</ToggleButton>
-                                                    <ToggleButton value="done">Done</ToggleButton>
-                                                </ToggleButtonGroup>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                {news.map((row, index) => (
+                                    <TableRow
+                                        key={row.id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell align="center">{index + 1}</TableCell>
+                                        <TableCell align="center">{row.title}</TableCell>
+                                        <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
+                                        <TableCell align="center">{new Date(row.createdAt).toLocaleTimeString()}</TableCell>
+                                        <TableCell align="center">
+                                            <ToggleButtonGroup
+                                                value={row.status}
+                                                exclusive
+                                                onChange={(event, newStatus) => handleStatusChange(row._id, newStatus)}
+                                                aria-label="status"
+                                            >
+                                                <ToggleButton value="pending">Pending</ToggleButton>
+                                                <ToggleButton value="active">Active</ToggleButton>
+                                            </ToggleButtonGroup>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
