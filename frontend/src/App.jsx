@@ -40,6 +40,8 @@ import ItemPage from './pages/store/ItemPage';
 import AddDriver from './pages/DeliveryManager/AddDriver';
 
 import Checkout from './pages/customer/Checkout';
+import News from './pages/guest/News';
+import AddNews from './pages/NewsManager/AddNews';
 
 
 export default function App() {
@@ -61,6 +63,7 @@ export default function App() {
             <Route path='review' element={<GuestReview />} />
             <Route path='hotdeals' element={<GuestHotdeals />} />
             <Route path='newsfeed' element={<Newsfeed />} />
+            <Route path='news/:id' element={<News />} />
             <Route path='itempage/:id' element={<ItemPage />} />
           </Route>
 
@@ -81,6 +84,7 @@ export default function App() {
             <Route path='profile' element={<UserProfile />} />
             <Route path='review' element={<GuestReview />} />
             <Route path='newsfeed' element={<Newsfeed />} />
+            <Route path='news/:id' element={<News />} />
             <Route path='itempage/:id' element={<ItemPage />} />
             <Route path='checkout' element={<Checkout />} />
           </Route>
@@ -107,6 +111,7 @@ export default function App() {
           <Route path='/news' element={<Dashboard />}>
             <Route path='' element={<NewsHome />} />
             <Route path='home' element={<NewsHome />} />
+            <Route path='addnews' element={<AddNews />} />
             <Route path='profile' element={<UserProfile />} />
           </Route>
 
