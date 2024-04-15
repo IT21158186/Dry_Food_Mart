@@ -41,6 +41,7 @@ import AddDriver from './pages/DeliveryManager/AddDriver';
 
 import Checkout from './pages/customer/Checkout';
 import News from './pages/guest/News';
+import AddNews from './pages/NewsManager/AddNews';
 
 
 export default function App() {
@@ -110,6 +111,7 @@ export default function App() {
           <Route path='/news' element={<Dashboard />}>
             <Route path='' element={<NewsHome />} />
             <Route path='home' element={<NewsHome />} />
+            <Route path='addnews' element={<AddNews />} />
             <Route path='profile' element={<UserProfile />} />
           </Route>
 
