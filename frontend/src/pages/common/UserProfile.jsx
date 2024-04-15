@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { stringAvatar } from './Dashboard'
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../common/AuthContext';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 
 // Use Tailwind CSS classes
 const CenteredContainer = styled(Grid)(({ theme }) => ({
@@ -30,9 +31,47 @@ const ProfilePaper = styled(Paper)(({ theme }) => ({
 // React functional component
 const UserProfile = () => {
 
-  const { userRole } = useAuth();
+  const { logout, userRole } = useAuth();
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [updateFormData, setUpdateFormData] = useState({
+    _id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    contactNo: '',
+    role: '',
+  });
+
+  const handleUpdateUser = (row) => {
+    setOpenUpdateDialog(true);
+    setUpdateFormData({
+      _id: row._id,
+      firstName: row.firstName,
+      lastName: row.lastName,
+      email: row.email,
+      contactNo: row.contactNo,
+      role: row.role,
+    });
+  };
+
+  const handleDialogClose = () => {
+    setOpenUpdateDialog(false);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const result = await authAxios.put(`${apiUrl}/user/update-account/${updateFormData._id}`, updateFormData);
+      if (result) {
+        getUserDetails()
+        toast.success('User Updated Successfully');
+        handleDialogClose();
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   const getUserDetails = async () => {
     try {
@@ -49,9 +88,23 @@ const UserProfile = () => {
     }
   };
 
+  const handleDeleteUser = async (id) => {
+    try {
+      const result = await authAxios.delete(`${apiUrl}/user/delete-account/${id}`);
+
+      if (result) {
+        toast.warning('User Deleted Successfully');
+        logout()
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      refreshPage();
+    }
+  };
+
   useEffect(() => {
     getUserDetails()
-    console.log(user);
   }, []);
 
   return (
@@ -94,13 +147,62 @@ const UserProfile = () => {
                 </div>
               )}
               <div>
-                <Button>Edit</Button>
-                <Button color='error'>Delete</Button>
+                <Button  onClick={() => handleUpdateUser(user)} >Edit</Button>
+                <Button color='error' onClick={() => handleDeleteUser(user._id)} >Delete</Button>
               </div>
             </ProfilePaper>
           </Grid>
         </> : <Loader />
       }
+      <Dialog open={openUpdateDialog} onClose={handleDialogClose}>
+        <DialogTitle>Update Details</DialogTitle>
+        <DialogContent>
+          <TextField
+            required
+            id="outlined-read-only-input"
+            label="First Name"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            onChange={(e) => setUpdateFormData({ ...updateFormData, firstName: e.target.value })}
+            value={updateFormData.firstName}
+          />
+          <TextField
+            required
+            id="outlined-read-only-input"
+            label="Last Name"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            onChange={(e) => setUpdateFormData({ ...updateFormData, lastName: e.target.value })}
+            value={updateFormData.lastName}
+          />
+          <TextField
+            required
+            id="outlined-read-only-input"
+            label="Contact No"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            onChange={(e) => setUpdateFormData({ ...updateFormData, contactNo: e.target.value })}
+            value={updateFormData.contactNo}
+          />
+          <TextField
+            required
+            id="outlined-read-only-input"
+            label="Email"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            onChange={(e) => setUpdateFormData({ ...updateFormData, email: e.target.value })}
+            value={updateFormData.email}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdate} color="primary">Submit</Button>
+          <Button onClick={handleDialogClose} color="secondary">Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </CenteredContainer>
   );
 };
