@@ -131,18 +131,14 @@ export default function ManageStaff() {
 
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
-  
-    // Header
+   
     const header = [['First Name', 'Last Name', 'Email', 'Contact No', 'Role']];
-    
-    // Data
-    const data = users.filter(user => user.role !== 'customer').map(user => [user.firstName, user.lastName, user.email, user.contactNo, user.role]);
   
-    // Set font size and align center in width
+    const data = users.filter(user => user.role !== 'customer').map(user => [user.firstName, user.lastName, user.email, user.contactNo, user.role]);
+    
     doc.setFontSize(12);
     doc.text("Our Staff Members", doc.internal.pageSize.width / 2, 10, { align: 'center' });
-  
-    // Add header and data to the table
+
     doc.autoTable({
       head: header,
       body: data,
