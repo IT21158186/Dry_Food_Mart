@@ -17,6 +17,8 @@ import { apiUrl } from '../../utils/Constants';
 import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
+import jsPDF from 'jspdf';
+
 
 const Home = () => {
   const [page, setPage] = useState(0);
@@ -114,6 +116,37 @@ const Home = () => {
     item.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
+  const handleGeneratePdf = () => {
+    const doc = new jsPDF();
+    const totalPagesExp = '{total_pages_count_string}';
+    let pageHeight = doc.internal.pageSize.height;
+    let y = 20; // Initial y position
+  
+    // Add heading
+    doc.setFontSize(20);
+    doc.text('Current News (without the image)', 105, y, { align: 'center' });
+
+    y += 10;
+  
+    // Generate table
+    doc.autoTable({
+      head: [['Name', 'Date', 'Status']],
+      body: filteredItems.map(row => [row.title, new Date(row.createdAt).toLocaleDateString(), row.status]),
+      startY: y + 10,
+      theme: 'grid', // Add table styling
+      didDrawPage: function(data) {
+        // Footer
+        let pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(10);
+        doc.text(190, pageHeight - 10, 'Page ' + doc.internal.getCurrentPageInfo().pageNumber + ' of ' + totalPagesExp);
+      }
+    });
+  
+    // Save the PDF
+    doc.save('current_news.pdf');
+  };
+
   return (
     <Container maxWidth={'800px'}>
       <Box
@@ -136,6 +169,9 @@ const Home = () => {
           Add News
         </Button>
       </Box>
+      <Button variant="outlined" color="primary" onClick={handleGeneratePdf}>
+  Generate Pdf
+</Button>
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {
           !isLoading ? <>

@@ -114,7 +114,8 @@ export default function AddDriver() {
     try {
       const res = await authAxios.get(`${apiUrl}/user/all`);
       if (nameFilter) {
-        setUsers(res.data.filter(user => user.firstName === nameFilter));
+        const lowercaseFilter = nameFilter.toLowerCase(); // Convert filter to lowercase
+        setUsers(res.data.filter(user => user.firstName.toLowerCase() === lowercaseFilter));
       } else {
         setUsers(res.data);
       }
@@ -128,6 +129,7 @@ export default function AddDriver() {
       }
     }
   };
+  
 
   useEffect(() => {
     getUsers();
