@@ -230,8 +230,8 @@ const Home = () => {
                         aria-label="status"
                         size="small"
                       >
-                        <ToggleButton value="pending">Pending</ToggleButton>
-                        <ToggleButton value="active">Active</ToggleButton>
+                        <ToggleButton value="pending" color="error">Pending</ToggleButton>
+                        <ToggleButton value="active" color="success">Active</ToggleButton>
                       </ToggleButtonGroup>
                     </TableCell>
                     <TableCell align="center" onClick={() => {removeOrder(row._id)}} className="cursor-pointer"> <Delete color="error" /></TableCell>
