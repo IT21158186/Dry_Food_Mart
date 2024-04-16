@@ -12,6 +12,7 @@ import reviewRouter from './routes/ReviewRoutes.js';
 import newsRouter from './routes/NewsRoutes.js';
 import addressRouter from './routes/AddressRoutes.js';
 import supplierRouter from './routes/SupplierRoutes.js';
+import salaryRouter from './routes/SalaryRoutes.js';
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -42,6 +43,8 @@ app.use('/news', newsRouter);
 app.use('/address', addressRouter);
 //supplier Routes
 app.use('/supplier', supplierRouter);
+//salary Routes
+app.use('/salary', salaryRouter);
 
 dbConfig().then(()=>{
     app.listen(port,()=>{
