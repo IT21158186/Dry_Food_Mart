@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'; // Import MUI components
-import { Delete } from '@mui/icons-material'; // Import MUI Delete icon
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { apiUrl } from '../../utils/Constants';
 import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
@@ -43,7 +43,6 @@ export default function ManageStaff() {
     });
   };
 
-  // Function to handle opening dialog for signup
   const handleSignupDialogOpen = () => {
     setOpenSignupDialog(true);
   };
@@ -52,12 +51,10 @@ export default function ManageStaff() {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  // Use this function to handle changes in checkboxes
   const handleCheckboxChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  // Function to handle closing dialogs
   const handleDialogClose = () => {
     setOpenSignupDialog(false);
     setOpenUpdateDialog(false);
@@ -75,12 +72,11 @@ export default function ManageStaff() {
     try {
       const result = await authAxios.post(`${apiUrl}/user/create`, formData);
       if (result) {
-        toast.success(result.data.message);
+        toast.success('Staff Member Account Created Successfully!');
       }
       getUsers();
       setOpenSignupDialog(false);
     } catch (error) {
-      //console.log(error);
       toast.error(error.response.data.message);
     }
   };
@@ -90,7 +86,7 @@ export default function ManageStaff() {
       const result = await authAxios.put(`${apiUrl}/user/update-account/${updateFormData._id}`, updateFormData);
       if (result) {
         getUsers();
-        toast.success('User Updated Successfully');
+        toast.success('Staff Member Updated Successfully!');
         handleDialogClose();
       }
     } catch (error) {
@@ -104,7 +100,7 @@ export default function ManageStaff() {
 
       if (result) {
         getUsers();
-        toast.warning('User Deleted Successfully');
+        toast.warning('Staff Member Deleted Successfully!');
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -113,17 +109,21 @@ export default function ManageStaff() {
     }
   };
 
-  const getUsers = async () => {
+  const getUsers = async (roleFilter) => {
     try {
       const res = await authAxios.get(`${apiUrl}/user/all`);
-      setUsers(res.data);
+      if (roleFilter) {
+        setUsers(res.data.filter(user => user.role === roleFilter));
+      } else {
+        setUsers(res.data);
+      }
       setIsLoading(false);
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 404) {
-        toast.error('Products not found');
+        toast.error('Staff Members not found');
       } else {
-        toast.error(error.response?.data?.message || 'An error occurred');
+        toast.error(error.response?.data?.message || 'An error occurred while getting all staff members!');
       }
     }
   };
@@ -133,43 +133,52 @@ export default function ManageStaff() {
   }, []);
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       <h2 className="text-2xl text-center my-4">Manage Staff</h2>
-      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add New Staff</Button>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <Button variant="contained" color="primary" onClick={handleSignupDialogOpen}>Add New Staff</Button>
+        </div>
+        <div>
+          <TextField id="search" label="Search by Role" variant="outlined" size="small" onChange={(e) => getUsers(e.target.value)} />
+          <Button variant="contained" color="primary" className="ml-2">Generate PDF</Button>
+        </div>
+      </div>
 
-      {
-        !isLoading ? <>
-          <TableContainer component={Paper} style={{ maxWidth: '800px', margin: 'auto' }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Contact No</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Action</TableCell>
+      {!isLoading ? (
+        <TableContainer component={Paper} className="max-w-4xl mx-auto">
+          <Table>
+            <TableHead>
+              <TableRow className="bg-blue-200">
+                <TableCell className="text-white">First Name</TableCell>
+                <TableCell className="text-white">Last Name</TableCell>
+                <TableCell className="text-white">Email</TableCell>
+                <TableCell className="text-white">Contact No</TableCell>
+                <TableCell className="text-white">Role</TableCell>
+                <TableCell className="text-white">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.filter(user => user.role !== 'customer').map(user => (
+                <TableRow key={user._id}>
+                  <TableCell>{user.firstName}</TableCell>
+                  <TableCell>{user.lastName}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.contactNo}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    <Button variant="outlined" color="primary" className="mr-2" onClick={() => handleUpdateUser(user)}>Update</Button>
+                    <Button variant="outlined" color="error" startIcon={<Delete />} onClick={() => handleDeleteUser(user._id)}>Delete</Button>
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.filter(user => user.role !== 'customer').map(user => (
-                  <TableRow key={user._id}>
-                    <TableCell>{user.firstName}</TableCell>
-                    <TableCell>{user.lastName}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.contactNo}</TableCell>
-                    <TableCell>{user.role}</TableCell>
-                    <TableCell>
-                      <Button variant="outlined" color="primary" className="mr-2" onClick={() => handleUpdateUser(user)}>Update</Button>
-                      <Button variant="outlined" color="error" startIcon={<Delete />} onClick={() => handleDeleteUser(user._id)}>Delete</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </> : <Loader />}
-      {/* Signup Dialog */}
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Loader />
+      )}
+
       <Dialog open={openSignupDialog} onClose={handleDialogClose}>
         <DialogTitle>Add New Staff</DialogTitle>
         <DialogContent>
@@ -231,9 +240,9 @@ export default function ManageStaff() {
           <Button onClick={handleDialogClose} color="secondary">Cancel</Button>
         </DialogActions>
       </Dialog>
-      {/* Update Dialog */}
+
       <Dialog open={openUpdateDialog} onClose={handleDialogClose}>
-        <DialogTitle>Update User</DialogTitle>
+        <DialogTitle>Update Staff</DialogTitle>
         <DialogContent>
           <TextField
             required
@@ -274,6 +283,17 @@ export default function ManageStaff() {
             variant="outlined"
             onChange={(e) => setUpdateFormData({ ...updateFormData, email: e.target.value })}
             value={updateFormData.email}
+          />
+          <TextField
+            required
+            id="outlined-read-only-input"
+            label="Role"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            onChange={(e) => setUpdateFormData({ ...updateFormData, role: e.target.value })}
+            value={updateFormData.role}
+            disabled
           />
         </DialogContent>
         <DialogActions>
