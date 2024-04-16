@@ -136,7 +136,7 @@ const Home = () => {
         <IconButton sx={{ p: '10px', marginRight: 2 }} aria-label="search">
           <SearchIcon />
         </IconButton>
-        <Button variant="outlined" color="success" component={Link} to="add-item">
+        <Button variant="outlined" color="success" component={Link} to="/inventory/add-item">
           Add Item
         </Button>
       </Box>
