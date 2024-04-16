@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { apiUrl } from "../../utils/Constants";
 import authAxios from "../../utils/authAxios";
 import { toast } from "react-toastify";
+import jsPDF from 'jspdf';
+import { Button } from '@material-ui/core';
 
 export default function Orders() {
 
@@ -40,6 +42,32 @@ export default function Orders() {
     getOrders();
   }, []);
 
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+    // Header
+    const header = [['Id', 'Date', 'Price', 'Driver', 'Status']];
+    // Data
+    const data = orders.map((orders, index) => [
+      orders._id, 
+      new Date(orders.createdAt).toLocaleDateString(), 
+      orders.driverId ? `${orders.driverId.firstName} ${orders.driverId.lastName}` : 'N/A', 
+      orders.price,  
+      orders.status, 
+    ]);
+    // Set font size and align center in width
+    doc.setFontSize(12);
+    doc.text("Order Details", doc.internal.pageSize.width / 2, 10, { align: 'center' });
+    // Add header and data to the table
+    doc.autoTable({
+      head: header,
+      body: data,
+      startY: 20,
+      margin: { top: 20 },
+    });
+  
+    doc.save("cus_orders.pdf");
+  }
+
   return (
     <div class="bg-white p-8 rounded-md w-full">
       <div class=" flex items-center justify-between pb-6">
@@ -57,6 +85,8 @@ export default function Orders() {
             </svg>
             <input class="bg-gray-50 outline-none ml-1 block " type="text" name="" id="" placeholder="search..." />
           </div>
+           <Button variant="contained" color="primary" className="ml-2" onClick={handleGeneratePDF}>Generate PDF</Button>
+        
         </div>
       </div>
       <div>

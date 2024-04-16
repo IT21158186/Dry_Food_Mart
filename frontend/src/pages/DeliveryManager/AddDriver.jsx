@@ -110,10 +110,14 @@ export default function AddDriver() {
     }
   };
 
-  const getUsers = async () => {
+  const getUsers = async (nameFilter) => {
     try {
       const res = await authAxios.get(`${apiUrl}/user/all`);
-      setUsers(res.data);
+      if (nameFilter) {
+        setUsers(res.data.filter(user => user.firstName === nameFilter));
+      } else {
+        setUsers(res.data);
+      }
       setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -132,8 +136,10 @@ export default function AddDriver() {
   return (
     <div>
       <h2 className="text-2xl text-center my-4">Manage Drivers</h2>
-      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add Driver</Button>
-
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add Driver</Button>
+        <TextField id="search" label="Search by Name" variant="outlined" size="small" onChange={(e) => getUsers(e.target.value)} />
+      </div>
       {
         !isLoading ? <>
           <TableContainer component={Paper} style={{ maxWidth: '800px', margin: 'auto' }}>
