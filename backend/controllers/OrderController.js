@@ -11,7 +11,8 @@ export const createOrder = async (req, res) => {
         cardNo,
         mm,
         yy,
-        name
+        name,
+        address
 
     } = req.body;
     const userId = req.loggedInId;
@@ -33,7 +34,8 @@ export const createOrder = async (req, res) => {
             paymentId,
             status,
             items,
-            price
+            price,
+            address
         });
 
         return res.status(201).json("Order Complete", newOrder , newPayment);
@@ -78,6 +80,22 @@ export const getallByUser = async (req, res) => {
         const Products = await OrderModel.find({ userId: userId })
         .populate({
             path: 'driverId',
+            model: 'users'  
+        })
+        res.status(200).json(Products);
+    } catch (error) {
+        res.status(500).json({
+            message: error.mesasge
+        })
+    }
+}
+
+export const getByDriver = async (req, res) => {
+    try {
+        const userId = req.loggedInId;
+        const Products = await OrderModel.find({ driverId: userId })
+        .populate({
+            path: 'userId',
             model: 'users'  
         })
         res.status(200).json(Products);

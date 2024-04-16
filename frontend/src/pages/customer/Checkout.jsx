@@ -3,6 +3,7 @@ import { apiUrl } from "../../utils/Constants";
 import authAxios from "../../utils/authAxios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Button, FormControl, MenuItem, Select, Typography } from "@mui/material";
 
 export default function Checkout() {
 
@@ -131,16 +132,27 @@ export default function Checkout() {
               <div>
                 <p class="text-xs font-semibold text-gray-500">Name on the card</p>
                 <label for="card-name" class="sr-only">Card name</label>
-                <text type="text" id="card-name" name="card-name" placeholder="Name on the card" class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                <input type="text" id="card-name" name="card-name" placeholder="Name on the card" class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                   value={formData.name}
                   onChange={(e) => handleCreate('name', e.target.value)} />
               </div>
               <div>
                 <p class="text-xs font-semibold text-gray-500">Address</p>
-                <label for="address" class="sr-only">Address</label>
-                <textarea type="text" id="address" name="address" placeholder="Address" class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
-                  value={formData.address}
-                  onChange={(e) => handleCreate('address', e.target.value)} />
+                {address.length >= 1 ?
+                  <FormControl fullWidth variant="outlined">
+                    <Select
+                      labelId="category-label"
+                      value={formData.address}
+                      onChange={(e) => handleCreate('address', e.target.value)}
+
+                    >
+                      {address.map((user, index) => (
+                        <MenuItem key={index} value={user.address}>{user.address}</MenuItem> // Update this line
+                      ))}
+                    </Select>
+                  </FormControl>
+                  : <Button onClick={() => { navigate('/customer/address') }}> Add Address</Button>}
+
               </div>
 
               <button type="submit" class="mt-4 inline-flex w-full items-center justify-center rounded bg-teal-600 py-2.5 px-4 text-base font-semibold tracking-wide text-white text-opacity-80 outline-none ring-offset-2 transition hover:text-opacity-100 focus:ring-2 focus:ring-teal-500 sm:text-lg">
