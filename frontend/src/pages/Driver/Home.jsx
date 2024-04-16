@@ -19,11 +19,26 @@ const Home = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orders, setOrders] = useState([]);
+  const [user, setUser] = useState({});
 
+
+  const getUserDetails = async () => {
+    try {
+      const response = await authAxios.get(`${apiUrl}/user/get-user`);
+      setUser(response.data);
+    } catch (error) {
+      console.error(error);
+      if (error.response && error.response.status === 404) {
+        toast.error('user profile not found.');
+      } else {
+        // toast.error(error.response?.data?.message || 'An error occurred');
+      }
+    }
+  };
 
   const getOrders = async () => {
     try {
-      const res = await authAxios.get(`${apiUrl}/order/all`);
+      const res = await authAxios.get(`${apiUrl}/order/driver`);
       setOrders(res.data);
       console.log(orders) // Directly set favorites to the array of favorites
     } catch (error) {
@@ -37,6 +52,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    getUserDetails();
     getOrders();
   }, []);
 
@@ -66,7 +82,7 @@ const Home = () => {
 
   return (
     <>
-    <div className="flex justify-center">
+      <div className="flex justify-center">
         <Typography style={{ margin: '20px 0', fontSize: '32px', fontWeight: 'bold', fontFamily: 'Times New Roman' }}>
           Driver Dashboard
         </Typography>
@@ -86,27 +102,27 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map((row, index) => (
-                  <TableRow
-                    key={row.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{row.userId.firstName} {row.userId.lastName}</TableCell>
-                    <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
-                    <TableCell align="center">{row.address}</TableCell>
-                    <TableCell align="center">
-                      <ToggleButtonGroup
-                        value={row.status}
-                        exclusive
-                        onChange={(event, newStatus) => handleStatusChange(row._id, newStatus)}
-                        aria-label="status"
-                        size="small"
-                      >
-                        <ToggleButton value="completed">Completed</ToggleButton>
-                      </ToggleButtonGroup>
-                    </TableCell>
-                  </TableRow>
+              {orders.map((row, index) => (
+                <TableRow
+                  key={row.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell align="center">{index + 1}</TableCell>
+                  <TableCell align="center">{row.userId.firstName} {row.userId.lastName}</TableCell>
+                  <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell align="center">{row.address}</TableCell>
+                  <TableCell align="center">
+                    <ToggleButtonGroup
+                      value={row.status}
+                      exclusive
+                      onChange={(event, newStatus) => handleStatusChange(row._id, newStatus)}
+                      aria-label="status"
+                      size="small"
+                    >
+                      <ToggleButton value="completed">Completed</ToggleButton>
+                    </ToggleButtonGroup>
+                  </TableCell>
+                </TableRow>
 
                 ))}
               </TableBody>
