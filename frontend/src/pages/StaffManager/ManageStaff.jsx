@@ -6,6 +6,7 @@ import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import { RadioGroup, FormLabel, Radio, FormControlLabel, FormGroup } from '@mui/material';
+import jsPDF from 'jspdf';
 
 export default function ManageStaff() {
 
@@ -128,6 +129,29 @@ export default function ManageStaff() {
     }
   };
 
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+  
+    // Header
+    const header = [['First Name', 'Last Name', 'Email', 'Contact No', 'Role']];
+    
+    // Data
+    const data = users.filter(user => user.role !== 'customer').map(user => [user.firstName, user.lastName, user.email, user.contactNo, user.role]);
+  
+    // Set font size and align center in width
+    doc.setFontSize(12);
+    doc.text("Our Staff Members", doc.internal.pageSize.width / 2, 10, { align: 'center' });
+  
+    // Add header and data to the table
+    doc.autoTable({
+      head: header,
+      body: data,
+      startY: 20,
+      margin: { top: 20 },
+    });
+  
+    doc.save("staff_members.pdf");
+  };
   useEffect(() => {
     getUsers();
   }, []);
@@ -141,7 +165,7 @@ export default function ManageStaff() {
         </div>
         <div>
           <TextField id="search" label="Search by Role" variant="outlined" size="small" onChange={(e) => getUsers(e.target.value)} />
-          <Button variant="contained" color="primary" className="ml-2">Generate PDF</Button>
+          <Button variant="contained" color="primary" className="ml-2" onClick={handleGeneratePDF}>Generate PDF</Button>
         </div>
       </div>
 
