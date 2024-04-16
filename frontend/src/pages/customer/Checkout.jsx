@@ -60,7 +60,7 @@ export default function Checkout() {
   }, 0);
 
   const [formData, setFormData] = useState({
-    items: [items],
+    items: items,
     price: total,
     email: '',
     cardNo: '',
