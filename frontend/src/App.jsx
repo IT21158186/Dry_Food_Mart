@@ -43,6 +43,8 @@ import Checkout from './pages/customer/Checkout';
 import News from './pages/guest/News';
 import AddNews from './pages/NewsManager/AddNews';
 import ManageAddress from './pages/customer/ManageAddress';
+import ManageStaff from './pages/StaffManager/ManageStaff';
+import Salary from './pages/StaffManager/Salary';
 
 
 export default function App() {
@@ -96,6 +98,12 @@ export default function App() {
             <Route path='' element={<InventoryHome />} />
             <Route path='home' element={<InventoryHome />} />
             <Route path='profile' element={<UserProfile />} />
+          </Route>
+
+          <Route path='/staff' element={<Dashboard />}>
+            <Route path='' element={<ManageStaff />} />
+            <Route path='home' element={<ManageStaff />} />
+            <Route path='salary' element={<Salary />} />
           </Route>
 
           <Route path='/order' element={<Dashboard />}>

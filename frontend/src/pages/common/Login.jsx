@@ -64,6 +64,10 @@ export default function Login() {
             toast.success('Login Success as a Delivery Manager')
             navigate('/delivery/home');
             break;
+          case 'staff': //delivery
+            toast.success('Login Success as a Staff Manager')
+            navigate('/staff/home');
+            break;
           case 'driver': //delivery
             toast.success('Login Success as a Driver')
             navigate('/driver/home');
