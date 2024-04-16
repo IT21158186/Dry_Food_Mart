@@ -94,17 +94,9 @@ export default function InventoryAddItems() {
                     />
                 </Grid>
 
-<<<<<<< HEAD
-            </form>
-
-            <br></br>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button style={{ backgroundColor: '#4CAF50', color: 'white', marginRight: '8px' }} variant="contained" fullWidth>
-=======
             <br></br>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button onClick={() => handleSubmit()} style={{ backgroundColor: '#4CAF50', color: 'white', marginRight: '8px' }} variant="contained" fullWidth>
->>>>>>> 01fab4e7eec4db5af6ed337f428776b91b2a6e0a
                     Add
                 </Button>
                 <div style={{ width: '8px' }}></div> {/* This adds space between buttons */}
@@ -112,12 +104,6 @@ export default function InventoryAddItems() {
                     Cancel
                 </Button>
             </div>
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 01fab4e7eec4db5af6ed337f428776b91b2a6e0a
         </div>
     </>
     );
