@@ -16,6 +16,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Delete } from "@mui/icons-material";
+import jsPDF from "jspdf";
 
 const Home = () => {
   const [page, setPage] = useState(0);
@@ -86,6 +87,32 @@ const Home = () => {
     }
   };
 
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+    // Header
+    const header = [['Customer Name', 'Date', 'Address', 'Driver Name', 'Status']];
+    // Data
+    const data = orders.map((orders) => [
+      orders.userId.firstName,
+      new Date(orders.createdAt).toLocaleDateString(),
+      orders.address,
+      orders.driverId ? orders.driverId.firstName : 'N/A',
+      orders.status,
+    ]);
+    // Set font size and align center in width
+    doc.setFontSize(12);
+    doc.text("Users Details", doc.internal.pageSize.width / 2, 10, { align: 'center' });
+    // Add header and data to the table
+    doc.autoTable({
+      head: header,
+      body: data,
+      startY: 20,
+      margin: { top: 20 },
+    });
+
+    doc.save("Delivers.pdf");
+  }
+
   useEffect(() => {
     getOrders();
   }, []);
@@ -119,6 +146,7 @@ const Home = () => {
           Delivery Dashboard
         </Typography>
       </div>
+      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleGeneratePDF}>Generate PDF</Button>
 
       <Container maxWidth={'800px'}>
         <Paper sx={{ width: '100%', marginTop: 2 }}>
