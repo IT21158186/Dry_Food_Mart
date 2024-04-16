@@ -1,15 +1,49 @@
 import { Cancel, Delete } from '@material-ui/icons'
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { apiUrl } from "../../utils/Constants";
 import authAxios from "../../utils/authAxios";
 import { toast } from "react-toastify";
 import jsPDF from 'jspdf';
-import { Button } from '@material-ui/core';
+import { Button, Dialog, DialogTitle } from '@material-ui/core';
+import { DialogActions, DialogContent, Rating} from '@mui/material';
 
 export default function Orders() {
 
   const [orders, setOrders] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    driverId:'',
+    rate: '',
+  });
+
+  const handleClickOpen = (driverId) => {
+    setOpen(true);
+    setFormData({
+      driverId: driverId,
+    });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCreateReview = (field, value) => {
+    setFormData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const result = await authAxios.post(`${apiUrl}/review/driver`, formData);
+      if (result) {
+        toast.success("review successfully");
+      }
+      getOrders();
+      setOpen(false);
+    } catch (error) {
+      //console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
 
   const getOrders = async () => {
     try {
@@ -28,11 +62,11 @@ export default function Orders() {
 
   const removeOrder = async (itemId) => {
     try {
-        const result = await authAxios.delete(`${apiUrl}/order/${itemId}`);
-        if (result) {
-          toast.success("Removed");
-          getOrders();
-        }
+      const result = await authAxios.delete(`${apiUrl}/order/${itemId}`);
+      if (result) {
+        toast.success("Removed");
+        getOrders();
+      }
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -48,11 +82,11 @@ export default function Orders() {
     const header = [['Id', 'Date', 'Price', 'Driver', 'Status']];
     // Data
     const data = orders.map((orders, index) => [
-      orders._id, 
-      new Date(orders.createdAt).toLocaleDateString(), 
-      orders.driverId ? `${orders.driverId.firstName} ${orders.driverId.lastName}` : 'N/A', 
-      orders.price,  
-      orders.status, 
+      orders._id,
+      new Date(orders.createdAt).toLocaleDateString(),
+      orders.driverId ? `${orders.driverId.firstName} ${orders.driverId.lastName}` : 'N/A',
+      orders.price,
+      orders.status,
     ]);
     // Set font size and align center in width
     doc.setFontSize(12);
@@ -64,7 +98,7 @@ export default function Orders() {
       startY: 20,
       margin: { top: 20 },
     });
-  
+
     doc.save("cus_orders.pdf");
   }
 
@@ -85,8 +119,7 @@ export default function Orders() {
             </svg>
             <input class="bg-gray-50 outline-none ml-1 block " type="text" name="" id="" placeholder="search..." />
           </div>
-           <Button variant="contained" color="primary" className="ml-2" onClick={handleGeneratePDF}>Generate PDF</Button>
-        
+          <Button variant="contained" color="primary" className="ml-2" onClick={handleGeneratePDF}>Generate PDF</Button>
         </div>
       </div>
       <div>
@@ -157,17 +190,19 @@ export default function Orders() {
                           <span class="relative">{orders.status}</span>
                         </span>
                       </td>
-                      
-                    {orders.status !== "completed" && (
-                      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <span
-                          class="relative inline-block px-3 py-1 font-semibold text-red-600 leading-tight">
-                          <span aria-hidden
-                            class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
-                          <span class="relative" onClick={() => {removeOrder(orders._id)}}> <Delete fontSize='small'/></span>
-                        </span>
-                      </td>
-                    )}
+                      {orders.status !== "completed" ? (
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <span class="relative inline-block px-3 py-1 font-semibold text-red-600 leading-tight">
+                            <span aria-hidden class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                            <span class="relative" onClick={() => { removeOrder(orders._id) }}> <Delete fontSize='small' /></span>
+                          </span>
+                        </td>
+                      ) : (
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          {orders.driverId ? <Button onClick={()=>{handleClickOpen(orders.driverId._id)}}>Rate Driver</Button> : 'N/A'}
+                        </td>
+                      )}
+
                     </tr>
                   </tbody>
                 )
@@ -176,6 +211,37 @@ export default function Orders() {
           </div>
         </div>
       </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            width: '33%',
+            minWidth: '200px',
+            maxWidth: '500px',
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          Rate Driver
+        </DialogTitle>
+        <DialogContent>
+
+          <Rating
+            name="simple-controlled"
+            value={formData.rate} onChange={(e) => handleCreateReview('rate', e.target.value)}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => { handleSubmit() }}>Publish</Button>
+          <Button onClick={handleClose} autoFocus>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

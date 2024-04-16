@@ -1,3 +1,4 @@
+import OrderGoodsModel from "../models/OrderGoods.js";
 import SupplierModel from "../models/SupplierModel.js";
 
 
@@ -31,6 +32,37 @@ export const createSupplier = async (req, res) => {
 };
 
 
+export const createOrder = async (req, res) => {
+    const {
+        sendTo,
+        description
+    } = req.body;
+
+    try {
+        const Mail = await OrderGoodsModel.create({
+            sendTo,
+            description
+        });
+
+        return res.status(201).json(Mail);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+//localhost:5000/supplier/
+export const getAllOrders = async (req, res) => {
+    try {
+        const Supplierss = await OrderGoodsModel.find()
+
+        res.status(200).json(Supplierss);
+    } catch (error) {
+        res.status(500).json({
+            message: error.mesasge
+        })
+    }
+}
 
 //localhost:5000/supplier/
 export const getAllSupplierss = async (req, res) => {

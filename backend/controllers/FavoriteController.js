@@ -45,3 +45,21 @@ export const removeFavorite = async (req, res) => {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   };
+
+  
+export const createNewsFavorite = async (req, res) => {
+    const userId = req.loggedInId;
+    const  newsId = req.params.id;
+    
+    try {
+        const newFavorite = await FavoriteModel.create({
+            userId,
+            newsId
+        });
+
+        return res.status(201).json(newFavorite);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
