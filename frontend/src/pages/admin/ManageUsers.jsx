@@ -6,6 +6,7 @@ import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import { RadioGroup, FormLabel, Radio, FormControlLabel, FormGroup } from '@mui/material';
+import jsPDF from 'jspdf';
 
 export default function ManageUsers() {
 
@@ -71,6 +72,32 @@ export default function ManageUsers() {
     });
   };
 
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+    // Header
+    const header = [['First Name', 'Last Name', 'Email', 'Contact No', 'Role']];
+    // Data
+    const data = users.map((users, index) => [
+      users.firstName,
+      users.lastName,
+      users.email,
+      users.contactNo,
+      users.role,
+    ]);
+    // Set font size and align center in width
+    doc.setFontSize(12);
+    doc.text("Users Details", doc.internal.pageSize.width / 2, 10, { align: 'center' });
+    // Add header and data to the table
+    doc.autoTable({
+      head: header,
+      body: data,
+      startY: 20,
+      margin: { top: 20 },
+    });
+
+    doc.save("users.pdf");
+  }
+
   const handleSubmit = async () => {
     try {
       const result = await authAxios.post(`${apiUrl}/user/create`, formData);
@@ -113,10 +140,14 @@ export default function ManageUsers() {
     }
   };
 
-  const getUsers = async () => {
+  const getUsers = async (roleFilter) => {
     try {
       const res = await authAxios.get(`${apiUrl}/user/all`);
-      setUsers(res.data);
+      if (roleFilter) {
+        setUsers(res.data.filter(user => user.role === roleFilter));
+      } else {
+        setUsers(res.data);
+      }
       setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -135,7 +166,12 @@ export default function ManageUsers() {
   return (
     <div>
       <h2 className="text-2xl text-center my-4">Manage Users</h2>
-      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add New User</Button>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add New User</Button>
+        <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleGeneratePDF}>Generate PDF</Button>
+        <TextField id="search" label="Search by Role" variant="outlined" size="small" onChange={(e) => getUsers(e.target.value)} />
+      </div>
 
       {
         !isLoading ? <>
