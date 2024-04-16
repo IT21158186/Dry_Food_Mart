@@ -9,6 +9,7 @@ export const createSalary = async (req, res) => {
         return res.status(400).json({ error: "All fields are required" });
     }
 
+
     const totalSalary = calculateTotalSalary(basic, attendanceAllowance, fuelAllowance, overtime);
 
     try {
@@ -51,14 +52,21 @@ export const updateSalary = async (req, res) => {
 
 // Utility function to calculate totalSalary
 function calculateTotalSalary(basic, attendanceAllowance, fuelAllowance, overtime) {
-    return basic + attendanceAllowance + fuelAllowance + overtime;
+    
+    const basicInt = parseInt(basic);
+    const attendanceAllowanceInt = parseInt(attendanceAllowance);
+    const fuelAllowanceInt = parseInt(fuelAllowance);
+    const overtimeInt = parseInt(overtime);
+
+    return basicInt + attendanceAllowanceInt + fuelAllowanceInt + overtimeInt;
 }
 
 
 //localhost:5000/salary/
 export const getAllSalaries = async (req, res) => {
     try {
-        const salaries = await SalaryModel.find();
+        const salaries = await SalaryModel.find()
+        .populate('userId');
         res.status(200).json(salaries);
     } catch (error) {
         res.status(500).json({
