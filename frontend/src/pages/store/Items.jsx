@@ -46,7 +46,7 @@ export default function Items() {
       res.data.forEach(item => {
         if (item.category === 'Snacks') {
           if (sweets.length < 4) {
-            sweets.push(item);
+            snacks.push(item);
           }
         } else if (item.category === 'Bakery') {
           if (bakery.length < 4) {

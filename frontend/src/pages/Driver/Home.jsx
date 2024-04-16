@@ -119,7 +119,7 @@ const Home = () => {
                       aria-label="status"
                       size="small"
                     >
-                      <ToggleButton value="completed">Delivered</ToggleButton>
+                      <ToggleButton value="completed" color="success">Delivered</ToggleButton>
                     </ToggleButtonGroup>
                   </TableCell>
                 </TableRow>

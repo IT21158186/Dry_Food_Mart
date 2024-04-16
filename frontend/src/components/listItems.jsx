@@ -6,7 +6,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link } from 'react-router-dom';
 import { Fastfood, Home, LocalBar, Payment, ShoppingCart, Store, StoreMallDirectory, Whatshot } from '@material-ui/icons';
 import ReviewsIcon from '@mui/icons-material/Reviews';
-import { DeliveryDining, ManageAccounts, Newspaper, ShoppingBag } from '@mui/icons-material';
+import { DeliveryDining, Mail, ManageAccounts, Newspaper, RateReview, ShoppingBag } from '@mui/icons-material';
+import { Rating } from '@mui/material';
 
 export const adminListItems = (
   <React.Fragment>
@@ -23,7 +24,7 @@ export const adminListItems = (
         <ListItemIcon>
           <ManageAccounts />
         </ListItemIcon>
-        <ListItemText primary="Managers" />
+        <ListItemText primary="Customers" />
       </ListItemButton>
     </Link>
     <Link to={'/admin/newsMng'}>
@@ -98,6 +99,14 @@ export const supplierListItems = (
         <Home />
       </ListItemIcon>
       <ListItemText primary="Home" />
+    </ListItemButton>
+  </Link>
+  <Link to={'/supplier/OrderGoods'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <Mail />
+      </ListItemIcon>
+      <ListItemText primary="Order Goods" />
     </ListItemButton>
   </Link>
   </React.Fragment>
@@ -192,6 +201,14 @@ export const driverListItems = (
         <Home />
       </ListItemIcon>
       <ListItemText primary="Home" />
+    </ListItemButton>
+  </Link>
+  <Link to={'/driver/ratings'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <RateReview />
+      </ListItemIcon>
+      <ListItemText primary="Ratings" />
     </ListItemButton>
   </Link>
   </React.Fragment>

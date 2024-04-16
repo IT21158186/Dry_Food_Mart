@@ -69,7 +69,7 @@ export default function Salary() {
     const header = [['Name', 'Basic', 'Attendance Allowance', 'FuelAllowance', 'Overtime', 'Total Salary']];
     // Data
     const data = salaries.map((salary, index) => [
-      `${salary.userId.firstName, salary.userId.lastName}`,
+      salary.userId.firstName,
       salary.basic,
       salary.attendanceAllowance,
       salary.fuelAllowance,

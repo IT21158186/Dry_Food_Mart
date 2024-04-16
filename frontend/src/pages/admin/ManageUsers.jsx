@@ -20,7 +20,7 @@ export default function ManageUsers() {
     email: '',
     password: '',
     contactNo: '',
-    role: '',
+    role: 'customer',
   });
 
   const [updateFormData, setUpdateFormData] = useState({
@@ -29,7 +29,6 @@ export default function ManageUsers() {
     lastName: '',
     email: '',
     contactNo: '',
-    role: '',
   });
 
   const handleUpdateUser = (row) => {
@@ -40,7 +39,6 @@ export default function ManageUsers() {
       lastName: row.lastName,
       email: row.email,
       contactNo: row.contactNo,
-      role: row.role,
     });
   };
 
@@ -68,7 +66,6 @@ export default function ManageUsers() {
       email: '',
       password: '',
       contactNo: '',
-      role: '',
     });
   };
 
@@ -82,7 +79,6 @@ export default function ManageUsers() {
       users.lastName,
       users.email,
       users.contactNo,
-      users.role,
     ]);
     // Set font size and align center in width
     doc.setFontSize(12);
@@ -144,7 +140,7 @@ export default function ManageUsers() {
     try {
       const res = await authAxios.get(`${apiUrl}/user/all`);
       if (roleFilter) {
-        setUsers(res.data.filter(user => user.role === roleFilter));
+        setUsers(res.data.filter(user => user.email === roleFilter));
       } else {
         setUsers(res.data);
       }
@@ -170,7 +166,7 @@ export default function ManageUsers() {
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add New User</Button>
         <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleGeneratePDF}>Generate PDF</Button>
-        <TextField id="search" label="Search by Role" variant="outlined" size="small" onChange={(e) => getUsers(e.target.value)} />
+        <TextField id="search" label="Search by Email" variant="outlined" size="small" onChange={(e) => getUsers(e.target.value)} />
       </div>
 
       {
@@ -188,7 +184,7 @@ export default function ManageUsers() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.filter(user => user.role !== 'customer').map(user => (
+                {users.filter(user => user.role == 'customer').map(user => (
                   <TableRow key={user._id}>
                     <TableCell>{user.firstName}</TableCell>
                     <TableCell>{user.lastName}</TableCell>
@@ -215,51 +211,6 @@ export default function ManageUsers() {
             <TextField required label="Contact No" margin="normal" name="contactNo" value={formData.contactNo} onChange={(e) => handleCreateUser('contactNo', e.target.value)} fullWidth />
             <TextField required label="Email" margin="normal" name="email" value={formData.email} onChange={(e) => handleCreateUser('email', e.target.value)} fullWidth />
             <TextField required label="Password" margin="normal" name="password" value={formData.password} onChange={(e) => handleCreateUser('password', e.target.value)} fullWidth />
-            <FormGroup>
-              <FormLabel id="demo-radio-buttons-group-label">Role</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Supplier"
-                  onChange={(e) => handleCheckboxChange('role', 'supplier', e.target.checked)}
-                  checked={formData.role === 'supplier'}
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Staff"
-                  onChange={(e) => handleCheckboxChange('role', 'staff', e.target.checked)}
-                  checked={formData.role === 'staff'}
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Inventory"
-                  onChange={(e) => handleCheckboxChange('role', 'inventory', e.target.checked)}
-                  checked={formData.role === 'inventory'}
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Order"
-                  onChange={(e) => handleCheckboxChange('role', 'order', e.target.checked)}
-                  checked={formData.role === 'order'}
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="News"
-                  onChange={(e) => handleCheckboxChange('role', 'news', e.target.checked)}
-                  checked={formData.role === 'news'}
-                />
-                <FormControlLabel
-                  control={<Radio />}
-                  label="Delivery"
-                  onChange={(e) => handleCheckboxChange('role', 'delivery', e.target.checked)}
-                  checked={formData.role === 'delivery'}
-                />
-              </RadioGroup>
-            </FormGroup>
           </form>
         </DialogContent>
         <DialogActions>

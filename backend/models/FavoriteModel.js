@@ -7,7 +7,13 @@ const FavoriteSchema = new mongoose.Schema({
     },
     itemId: {
         type: mongoose.Schema.ObjectId,
-        ref: 'items'
+        ref: 'items',
+        default: null
+    },
+    newsId: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'news',
+        default: null
     },
 
 }, { timestamps: true });

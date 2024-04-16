@@ -45,6 +45,8 @@ import AddNews from './pages/NewsManager/AddNews';
 import ManageAddress from './pages/customer/ManageAddress';
 import ManageStaff from './pages/StaffManager/ManageStaff';
 import Salary from './pages/StaffManager/Salary';
+import Ratings from './pages/Driver/Ratings';
+import OrderGoods from './pages/SupplierManager/OrderGoods';
 
 
 export default function App() {
@@ -115,6 +117,7 @@ export default function App() {
           <Route path='/supplier' element={<Dashboard />}>
             <Route path='' element={<SupplierHome />} />
             <Route path='home' element={<SupplierHome />} />
+            <Route path='OrderGoods' element={<OrderGoods />} />
             <Route path='profile' element={<UserProfile />} />
           </Route>
 
@@ -135,6 +138,7 @@ export default function App() {
           <Route path='/driver' element={<Dashboard />}>
             <Route path='' element={<DriverHome />} />
             <Route path='home' element={<DriverHome />} />
+            <Route path='ratings' element={<Ratings />} />
             <Route path='profile' element={<UserProfile />} />
           </Route>
         </Routes>
