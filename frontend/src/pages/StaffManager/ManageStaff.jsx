@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import { RadioGroup, FormLabel, Radio, FormControlLabel, FormGroup } from '@mui/material';
 
-export default function ManageUsers() {
+export default function ManageStaff() {
 
   const [users, setUsers] = useState([]);
   const [openSignupDialog, setOpenSignupDialog] = useState(false);
@@ -134,8 +134,8 @@ export default function ManageUsers() {
 
   return (
     <div>
-      <h2 className="text-2xl text-center my-4">Manage Users</h2>
-      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add New User</Button>
+      <h2 className="text-2xl text-center my-4">Manage Staff</h2>
+      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add New Staff</Button>
 
       {
         !isLoading ? <>
@@ -171,7 +171,7 @@ export default function ManageUsers() {
         </> : <Loader />}
       {/* Signup Dialog */}
       <Dialog open={openSignupDialog} onClose={handleDialogClose}>
-        <DialogTitle>Add New User</DialogTitle>
+        <DialogTitle>Add New Staff</DialogTitle>
         <DialogContent>
           <form>
             <TextField required label="First Name" margin="normal" name="firstName" value={formData.firstName} onChange={(e) => handleCreateUser('firstName', e.target.value)} fullWidth />
@@ -188,15 +188,15 @@ export default function ManageUsers() {
               >
                 <FormControlLabel
                   control={<Radio />}
-                  label="Supplier"
-                  onChange={(e) => handleCheckboxChange('role', 'supplier', e.target.checked)}
-                  checked={formData.role === 'supplier'}
-                />
-                <FormControlLabel
-                  control={<Radio />}
                   label="Staff"
                   onChange={(e) => handleCheckboxChange('role', 'staff', e.target.checked)}
                   checked={formData.role === 'staff'}
+                />
+                <FormControlLabel
+                  control={<Radio />}
+                  label="Supplier"
+                  onChange={(e) => handleCheckboxChange('role', 'supplier', e.target.checked)}
+                  checked={formData.role === 'supplier'}
                 />
                 <FormControlLabel
                   control={<Radio />}
