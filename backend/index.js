@@ -9,6 +9,8 @@ import favoruteRouter from './routes/FavoriteRoutes.js';
 import cartRouter from './routes/CartRoutes.js';
 import orderRouter from './routes/OrderRoutes.js';
 import reviewRouter from './routes/ReviewRoutes.js';
+import newsRouter from './routes/NewsRoutes.js';
+import addressRouter from './routes/AddressRoutes.js';
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -33,6 +35,10 @@ app.use('/cart', cartRouter);
 app.use('/order', orderRouter);
 //review Routes
 app.use('/review', reviewRouter);
+//news Routes
+app.use('/news', newsRouter);
+//address Routes
+app.use('/address', addressRouter);
 
 dbConfig().then(()=>{
     app.listen(port,()=>{

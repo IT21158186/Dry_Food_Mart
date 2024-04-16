@@ -13,6 +13,7 @@ import { stringAvatar } from './Dashboard'
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../common/AuthContext';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 // Use Tailwind CSS classes
 const CenteredContainer = styled(Grid)(({ theme }) => ({
@@ -31,6 +32,7 @@ const ProfilePaper = styled(Paper)(({ theme }) => ({
 // React functional component
 const UserProfile = () => {
 
+  const navigate = useNavigate();
   const { logout, userRole } = useAuth();
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -143,7 +145,7 @@ const UserProfile = () => {
               </Typography>
               {userRole === 'customer' && (
                 <div>
-                  <Button color='success'>Add Address</Button>
+                  <Button color='success' onClick={() =>{navigate('/customer/address')}}>Manage Address</Button>
                 </div>
               )}
               <div>

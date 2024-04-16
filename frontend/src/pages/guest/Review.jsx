@@ -242,17 +242,6 @@ export default function Review() {
         </Accordion>
 
       ))}
-
-
-
-
-
-
-
-
-
-
-
       <Dialog
         open={open2}
         onClose={handleClose2}
@@ -267,7 +256,7 @@ export default function Review() {
         }}
       >
         <DialogTitle id="alert-dialog-title">
-          {"Publish Review"}
+          {"Update Review"}
         </DialogTitle>
         <DialogContent>
 
@@ -301,16 +290,6 @@ export default function Review() {
           </Button>
         </DialogActions>
       </Dialog>
-
-
-
-
-
-
-
-
-
-
     </div>
   );
 }
