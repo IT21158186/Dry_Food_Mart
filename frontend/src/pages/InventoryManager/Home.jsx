@@ -17,15 +17,23 @@ import { apiUrl } from '../../utils/Constants';
 import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
+import { jsPDF } from 'jspdf';
 
 const Home = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
-
   const [items, setItems] = useState([]);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [updateFormData, setUpdateFormData] = useState({
+    _id: '',
+    itemName: '',
+    category: '',
+    quantity: '',
+    price: '',
+    img: '',
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -40,20 +48,9 @@ const Home = () => {
     setSearchQuery(event.target.value);
   };
 
-  // Function to handle closing dialogs
   const handleDialogClose = () => {
     setOpenUpdateDialog(false);
   };
-
-
-  const [updateFormData, setUpdateFormData] = useState({
-    _id: '',
-    itemName: '',
-    category: '',
-    quantity: '',
-    price: '',
-    img: '',
-  });
 
   const handleUpdateUser = (row) => {
     setOpenUpdateDialog(true);
@@ -112,10 +109,62 @@ const Home = () => {
     getItems();
   }, []);
 
-  // Filter items based on searchQuery
   const filteredItems = items.filter(item =>
     item.itemName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+  
+    // Set Header
+    const header = 'Inventory';
+    const textWidth = doc.getStringUnitWidth(header) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const x = (pageWidth - textWidth) / 2;
+  
+    // Function to add table content for each page
+    const addPageContent = (start, end) => {
+      const tableRows = [];
+      items.slice(start, end).forEach((row, index) => {
+        const rowData = [
+          row.itemName,
+          row.category,
+          row.quantity,
+          row.price,
+        ];
+        tableRows.push(rowData);
+      });
+  
+      doc.autoTable({
+        head: [['Name', 'Category', 'Quantity', 'Price']],
+        body: tableRows,
+        startY: 20,
+      });
+    };
+  
+    let startRow = 0;
+    let endRow = rowsPerPage;
+  
+    // Add pages until all rows are added
+    while (startRow < items.length) {
+      addPageContent(startRow, endRow);
+      startRow = endRow;
+      endRow = Math.min(startRow + rowsPerPage, items.length);
+      if (endRow < items.length) {
+        doc.addPage();
+      }
+    }
+  
+    // Add Header to each page
+    for (let i = 1; i <= doc.getNumberOfPages(); i++) {
+      doc.setPage(i);
+      doc.text(x, 10, header);
+    }
+  
+    // Save the PDF
+    doc.save('inventory.pdf');
+  };
+  
 
   return (
     <Container maxWidth={'800px'}>
@@ -138,6 +187,9 @@ const Home = () => {
         </IconButton>
         <Button variant="outlined" color="success" component={Link} to="/inventory/add-item">
           Add Item
+        </Button>
+        <Button variant="outlined" color="primary" onClick={generatePDF}>
+          Generate PDF
         </Button>
       </Box>
       <Paper sx={{ width: '100%', marginTop: 2 }}>
@@ -262,7 +314,6 @@ const Home = () => {
           <Button onClick={handleDialogClose} color="secondary">Cancel</Button>
         </DialogActions>
       </Dialog>
-
     </Container>
   );
 };
