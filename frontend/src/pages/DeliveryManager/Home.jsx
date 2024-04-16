@@ -64,7 +64,6 @@ const Home = () => {
     try {
       const res = await authAxios.get(`${apiUrl}/order/all`);
       setOrders(res.data);
-      console.log(orders) // Directly set favorites to the array of favorites
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 404) {
@@ -79,7 +78,7 @@ const Home = () => {
     try {
       const result = await authAxios.delete(`${apiUrl}/order/${itemId}`);
       if (result) {
-        toast.success("Removed");
+        toast.success("Order Cancelled and Removed successfully!");
         getOrders();
       }
     } catch (error) {
@@ -99,9 +98,6 @@ const Home = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-
-
 
   const handleStatusChange = async () => {
     try {
@@ -134,7 +130,7 @@ const Home = () => {
                   <TableCell align="center">Customer Name</TableCell>
                   <TableCell align="center">Placed Date</TableCell>
                   <TableCell align="center">Address</TableCell>
-                  <TableCell align="center">Driver Details</TableCell>
+                  <TableCell align="center">Driver Name</TableCell>
                   <TableCell align="center">Status</TableCell>
                 </TableRow>
               </TableHead>
@@ -148,13 +144,24 @@ const Home = () => {
                     <TableCell align="center">{row.userId.firstName} {row.userId.lastName}</TableCell>
                     <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
                     <TableCell align="center">{row.address}</TableCell>
-                    <TableCell align="center" onClick={() => { handleClickOpen(row) }} className="cursor-pointer"><Button>{row.driverId ? row.driverId.firstName : 'Asign a driver'}</Button></TableCell>
+                    <TableCell align="center" onClick={() => { handleClickOpen(row) }} className="cursor-pointer">
+                      <Button>{row.driverId ? row.driverId.firstName : 'Assign a driver'}</Button>
+                    </TableCell>
                     <TableCell align="center"><Chip label={row.status} color="primary" variant="outlined" /></TableCell>
-                    <TableCell align="center" onClick={() => { removeOrder(row._id) }} className="cursor-pointer"> <Delete color="error" /></TableCell>
+                    <TableCell align="center" onClick={() => { removeOrder(row._id) }} className="cursor-pointer">
+                      <Delete color="error" />
+                    </TableCell>
+                    
+                    {/* Change Driver button */}
+                    {row.driverId && row.status !== 'completed' && (
+                      <TableCell align="center">
+                        <Button onClick={() => { handleClickOpen(row) }}>Change Driver</Button>
+                      </TableCell>
+                    )}
 
-
+                    {/* Dialog for assigning/changing a driver */}
                     <Dialog
-                      open={open}
+                      open={open && (updateFormData._id === row._id || row.driverId)}
                       onClose={handleClose}
                       aria-labelledby="alert-dialog-title"
                       aria-describedby="alert-dialog-description"
@@ -170,22 +177,18 @@ const Home = () => {
                         {"Assign a driver"}
                       </DialogTitle>
                       <DialogContent>
-
                         <FormControl fullWidth variant="outlined">
                           <Typography component="legend">Available Drivers</Typography>
                           <Select
                             labelId="category-label"
                             onChange={(e) => setUpdateFormData({ ...updateFormData, driverId: e.target.value })}
-
                           >
-                            {users.filter(user => user.role == 'driver').map(user => (
-                              <MenuItem key={index} value={user._id}>{user.firstName} {user.lastName}</MenuItem> // Update this line
+                            {users.filter(user => user.role === 'driver').map(user => (
+                              <MenuItem key={user._id} value={user._id}>{user.firstName} {user.lastName}</MenuItem>
                             ))}
                           </Select>
                         </FormControl>
-
                       </DialogContent>
-
                       <DialogActions>
                         <Button onClick={handleStatusChange} autoFocus>
                           Save
@@ -196,13 +199,12 @@ const Home = () => {
                       </DialogActions>
                     </Dialog>
                   </TableRow>
-
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[3, 25, 100]} // Include 3 as an option
+            rowsPerPageOptions={[3, 25, 100]}
             component="div"
             rowsPerPage={rowsPerPage}
             page={page}

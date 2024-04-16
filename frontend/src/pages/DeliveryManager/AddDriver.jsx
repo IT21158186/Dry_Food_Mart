@@ -72,7 +72,7 @@ export default function AddDriver() {
     try {
       const result = await authAxios.post(`${apiUrl}/user/create`, formData);
       if (result) {
-        toast.success(result.data.message);
+        toast.success('Driver Account created successfully!');
       }
       getUsers();
       setOpenSignupDialog(false);
@@ -87,7 +87,7 @@ export default function AddDriver() {
       const result = await authAxios.put(`${apiUrl}/user/update-account/${updateFormData._id}`, updateFormData);
       if (result) {
         getUsers();
-        toast.success('User Updated Successfully');
+        toast.success('Driver Account Updated Successfully!');
         handleDialogClose();
       }
     } catch (error) {
@@ -101,7 +101,7 @@ export default function AddDriver() {
 
       if (result) {
         getUsers();
-        toast.warning('User Deleted Successfully');
+        toast.warning('Driver Account Deleted Successfully!');
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -118,9 +118,9 @@ export default function AddDriver() {
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 404) {
-        toast.error('Products not found');
+        toast.error('Driver Accounts not found');
       } else {
-        toast.error(error.response?.data?.message || 'An error occurred');
+        toast.error(error.response?.data?.message || 'An error occurred while getting Driver Accounts!');
       }
     }
   };
@@ -168,7 +168,7 @@ export default function AddDriver() {
         </> : <Loader />}
       {/* Signup Dialog */}
       <Dialog open={openSignupDialog} onClose={handleDialogClose}>
-        <DialogTitle>Add New User</DialogTitle>
+        <DialogTitle>Add New Driver</DialogTitle>
         <DialogContent>
           <form>
             <TextField required label="First Name" margin="normal" name="firstName" value={formData.firstName} onChange={(e) => handleCreateUser('firstName', e.target.value)} fullWidth />
