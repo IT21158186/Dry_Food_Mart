@@ -184,6 +184,7 @@ const ManageNewsFeed = () => {
                                                 exclusive
                                                 onChange={(event, newStatus) => handleStatusChange(row._id, newStatus)}
                                                 aria-label="status"
+                                                size="small"
                                             >
                                                 <ToggleButton value="pending">Pending</ToggleButton>
                                                 <ToggleButton value="active">Active</ToggleButton>

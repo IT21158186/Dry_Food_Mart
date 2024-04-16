@@ -55,6 +55,10 @@ export const getAllOrders = async (req, res) => {
                 model: 'users'  
             })
             .populate({
+                path: 'driverId',
+                model: 'users'  
+            })
+            .populate({
                 path: 'paymentId',
                 model: 'payment'  
             });
@@ -72,6 +76,10 @@ export const getallByUser = async (req, res) => {
     try {
         const userId = req.loggedInId;
         const Products = await OrderModel.find({ userId: userId })
+        .populate({
+            path: 'driverId',
+            model: 'users'  
+        })
         res.status(200).json(Products);
     } catch (error) {
         res.status(500).json({

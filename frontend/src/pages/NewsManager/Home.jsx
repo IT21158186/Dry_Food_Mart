@@ -22,7 +22,6 @@ const Home = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
-
   const [items, setItems] = useState([]);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -133,7 +132,7 @@ const Home = () => {
         <IconButton sx={{ p: '10px', marginRight: 2 }} aria-label="search">
           <SearchIcon />
         </IconButton>
-        <Button variant="outlined" color="success" component={Link} to="addnews">
+        <Button variant="outlined" color="success" component={Link} to="/news/addnews">
           Add News
         </Button>
       </Box>
