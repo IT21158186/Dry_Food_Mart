@@ -4,7 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link } from 'react-router-dom';
-import { Fastfood, Home, LocalBar, ShoppingCart, Store, StoreMallDirectory, Whatshot } from '@material-ui/icons';
+import { Fastfood, Home, LocalBar, Payment, ShoppingCart, Store, StoreMallDirectory, Whatshot } from '@material-ui/icons';
 import ReviewsIcon from '@mui/icons-material/Reviews';
 import { DeliveryDining, ManageAccounts, Newspaper, ShoppingBag } from '@mui/icons-material';
 
@@ -158,6 +158,27 @@ export const deliveryListItems = (
         <DeliveryDining />
       </ListItemIcon>
       <ListItemText primary="Manage Drivers" />
+    </ListItemButton>
+  </Link>
+  </React.Fragment>
+);
+
+export const staffListItems = (
+  <React.Fragment>
+  <Link to={'/staff'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <Home />
+      </ListItemIcon>
+      <ListItemText primary="Manage Staff" />
+    </ListItemButton>
+  </Link>
+  <Link to={'/staff/salary'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <Payment />
+      </ListItemIcon>
+      <ListItemText primary="Salary" />
     </ListItemButton>
   </Link>
   </React.Fragment>
