@@ -8,7 +8,26 @@ export default function Checkout() {
 
   const [cart, setCart] = useState([]);
   const [items, setItems] = useState([]);
+  const [address, setAddress] = useState([]);
   const navigate = useNavigate();
+
+  const getAddress = async () => {
+    try {
+      const res = await authAxios.get(`${apiUrl}/address`);
+      setAddress(res.data.addressData);
+    } catch (error) {
+      console.error(error);
+      if (error.response && error.response.status === 404) {
+        toast.error('Products not found');
+      } else {
+        toast.error(error.response?.data?.message || 'An error occurred');
+      }
+    }
+  };
+
+  useEffect(() => {
+    getAddress();
+  }, []);
 
   const getCart = async () => {
     try {
@@ -46,6 +65,7 @@ export default function Checkout() {
     cardNo: '',
     mm: '',
     yy: '',
+    address: '',
     name: ''
   });
 
@@ -109,10 +129,18 @@ export default function Checkout() {
                 </div>
               </div>
               <div>
+                <p class="text-xs font-semibold text-gray-500">Name on the card</p>
                 <label for="card-name" class="sr-only">Card name</label>
-                <input type="text" id="card-name" name="card-name" placeholder="Name on the card" class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                <text type="text" id="card-name" name="card-name" placeholder="Name on the card" class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                   value={formData.name}
                   onChange={(e) => handleCreate('name', e.target.value)} />
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-gray-500">Address</p>
+                <label for="address" class="sr-only">Address</label>
+                <textarea type="text" id="address" name="address" placeholder="Address" class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                  value={formData.address}
+                  onChange={(e) => handleCreate('address', e.target.value)} />
               </div>
 
               <button type="submit" class="mt-4 inline-flex w-full items-center justify-center rounded bg-teal-600 py-2.5 px-4 text-base font-semibold tracking-wide text-white text-opacity-80 outline-none ring-offset-2 transition hover:text-opacity-100 focus:ring-2 focus:ring-teal-500 sm:text-lg">

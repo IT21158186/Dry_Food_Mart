@@ -42,6 +42,7 @@ import AddDriver from './pages/DeliveryManager/AddDriver';
 import Checkout from './pages/customer/Checkout';
 import News from './pages/guest/News';
 import AddNews from './pages/NewsManager/AddNews';
+import ManageAddress from './pages/customer/ManageAddress';
 
 
 export default function App() {
@@ -87,6 +88,7 @@ export default function App() {
             <Route path='news/:id' element={<News />} />
             <Route path='itempage/:id' element={<ItemPage />} />
             <Route path='checkout' element={<Checkout />} />
+            <Route path='address' element={<ManageAddress />} />
           </Route>
 
           <Route path='/inventory' element={<Dashboard />}>

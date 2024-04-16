@@ -9,6 +9,10 @@ const OrderSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'payment'
     },
+    address: {
+        type: String,
+        required: true
+    },
     price: {
         type: Number,
         required: true
@@ -16,6 +20,7 @@ const OrderSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ["active", "completed","pending",""],
+        default: "pending"
     },
     items: [
         {
@@ -25,6 +30,11 @@ const OrderSchema = new mongoose.Schema({
             }
         }
     ],
+    driverId: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'users',
+        default: null
+    },
 
 }, { timestamps: true });
 

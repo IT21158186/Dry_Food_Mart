@@ -7,37 +7,26 @@ import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import { RadioGroup, FormLabel, Radio, FormControlLabel, FormGroup } from '@mui/material';
 
-export default function AddDriver() {
+export default function ManageAddress() {
 
   const [users, setUsers] = useState([]);
   const [openSignupDialog, setOpenSignupDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    contactNo: '',
-    role: 'driver',
+    address: '',
   });
 
   const [updateFormData, setUpdateFormData] = useState({
     _id: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    contactNo: '',
+    address: '',
   });
 
   const handleUpdateUser = (row) => {
     setOpenUpdateDialog(true);
     setUpdateFormData({
       _id: row._id,
-      firstName: row.firstName,
-      lastName: row.lastName,
-      email: row.email,
-      contactNo: row.contactNo,
+      address: row.address
     });
   };
 
@@ -60,21 +49,17 @@ export default function AddDriver() {
     setOpenSignupDialog(false);
     setOpenUpdateDialog(false);
     setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      contactNo: '',
+      address: ''
     });
   };
 
   const handleSubmit = async () => {
     try {
-      const result = await authAxios.post(`${apiUrl}/user/create`, formData);
+      const result = await authAxios.post(`${apiUrl}/address`, formData);
       if (result) {
         toast.success(result.data.message);
       }
-      getUsers();
+      getAddress();
       setOpenSignupDialog(false);
     } catch (error) {
       //console.log(error);
@@ -84,9 +69,9 @@ export default function AddDriver() {
 
   const handleUpdate = async () => {
     try {
-      const result = await authAxios.put(`${apiUrl}/user/update-account/${updateFormData._id}`, updateFormData);
+      const result = await authAxios.put(`${apiUrl}/address/${updateFormData._id}`, updateFormData);
       if (result) {
-        getUsers();
+        getAddress();
         toast.success('User Updated Successfully');
         handleDialogClose();
       }
@@ -97,10 +82,10 @@ export default function AddDriver() {
 
   const handleDeleteUser = async (id) => {
     try {
-      const result = await authAxios.delete(`${apiUrl}/user/delete-account/${id}`);
+      const result = await authAxios.delete(`${apiUrl}/address/${id}`);
 
       if (result) {
-        getUsers();
+        getAddress();
         toast.warning('User Deleted Successfully');
       }
     } catch (error) {
@@ -110,10 +95,11 @@ export default function AddDriver() {
     }
   };
 
-  const getUsers = async () => {
+  const getAddress = async () => {
     try {
-      const res = await authAxios.get(`${apiUrl}/user/all`);
-      setUsers(res.data);
+      const res = await authAxios.get(`${apiUrl}/address`);
+      setUsers(res.data.addressData);
+      console.log(res.data);
       setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -126,13 +112,13 @@ export default function AddDriver() {
   };
 
   useEffect(() => {
-    getUsers();
+    getAddress();
   }, []);
 
   return (
     <div>
-      <h2 className="text-2xl text-center my-4">Manage Drivers</h2>
-      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add Driver</Button>
+      <h2 className="text-2xl text-center my-4">Manage Address</h2>
+      <Button variant="contained" color="primary" style={{ marginBottom: '20px' }} onClick={handleSignupDialogOpen}>Add Address</Button>
 
       {
         !isLoading ? <>
@@ -140,22 +126,20 @@ export default function AddDriver() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Contact No</TableCell>
-                  <TableCell>Role</TableCell>
+                  <TableCell>No</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
                   <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.filter(user => user.role == 'driver').map(user => (
+                {users.map((user, index) => (
                   <TableRow key={user._id}>
-                    <TableCell>{user.firstName}</TableCell>
-                    <TableCell>{user.lastName}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.contactNo}</TableCell>
-                    <TableCell>{user.role}</TableCell>
+                    <TableCell>{index + 1 }</TableCell>
+                    <TableCell>{user.address}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
                     <TableCell>
                       <Button size='small' variant="outlined" color="primary" className="mr-2" onClick={() => handleUpdateUser(user)}>Update</Button>
                       <Button size='small' variant="outlined" color="error" startIcon={<Delete />} onClick={() => handleDeleteUser(user._id)}>Delete</Button>
@@ -171,11 +155,7 @@ export default function AddDriver() {
         <DialogTitle>Add New User</DialogTitle>
         <DialogContent>
           <form>
-            <TextField required label="First Name" margin="normal" name="firstName" value={formData.firstName} onChange={(e) => handleCreateUser('firstName', e.target.value)} fullWidth />
-            <TextField required label="Last Name" margin="normal" name="lastName" value={formData.lastName} onChange={(e) => handleCreateUser('lastName', e.target.value)} fullWidth />
-            <TextField required label="Contact No" margin="normal" name="contactNo" value={formData.contactNo} onChange={(e) => handleCreateUser('contactNo', e.target.value)} fullWidth />
-            <TextField required label="Email" margin="normal" name="email" value={formData.email} onChange={(e) => handleCreateUser('email', e.target.value)} fullWidth />
-            <TextField required label="Password" margin="normal" name="password" value={formData.password} onChange={(e) => handleCreateUser('password', e.target.value)} fullWidth />
+            <TextField multiline rows={5} required label="Address" margin="normal" name="address" value={formData.address} onChange={(e) => handleCreateUser('address', e.target.value)} fullWidth />
           </form>
         </DialogContent>
         <DialogActions>
@@ -185,47 +165,19 @@ export default function AddDriver() {
       </Dialog>
       {/* Update Dialog */}
       <Dialog open={openUpdateDialog} onClose={handleDialogClose}>
-        <DialogTitle>Update Driver</DialogTitle>
+        <DialogTitle>Update User</DialogTitle>
         <DialogContent>
           <TextField
             required
             id="outlined-read-only-input"
             label="First Name"
-            fullWidth
+            fullWidth 
+            multiline 
+            rows={5} 
             margin="normal"
             variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, firstName: e.target.value })}
-            value={updateFormData.firstName}
-          />
-          <TextField
-            required
-            id="outlined-read-only-input"
-            label="Last Name"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, lastName: e.target.value })}
-            value={updateFormData.lastName}
-          />
-          <TextField
-            required
-            id="outlined-read-only-input"
-            label="Contact No"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, contactNo: e.target.value })}
-            value={updateFormData.contactNo}
-          />
-          <TextField
-            required
-            id="outlined-read-only-input"
-            label="Email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, email: e.target.value })}
-            value={updateFormData.email}
+            onChange={(e) => setUpdateFormData({ ...updateFormData, address: e.target.value })}
+            value={updateFormData.address}
           />
         </DialogContent>
         <DialogActions>

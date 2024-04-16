@@ -6,7 +6,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link } from 'react-router-dom';
 import { Fastfood, Home, LocalBar, ShoppingCart, Store, StoreMallDirectory, Whatshot } from '@material-ui/icons';
 import ReviewsIcon from '@mui/icons-material/Reviews';
-import { ManageAccounts, Newspaper, ShoppingBag } from '@mui/icons-material';
+import { DeliveryDining, ManageAccounts, Newspaper, ShoppingBag } from '@mui/icons-material';
 
 export const adminListItems = (
   <React.Fragment>
@@ -150,6 +150,14 @@ export const deliveryListItems = (
         <Home />
       </ListItemIcon>
       <ListItemText primary="Home" />
+    </ListItemButton>
+  </Link>
+  <Link to={'/delivery/addDriver'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <DeliveryDining />
+      </ListItemIcon>
+      <ListItemText primary="Manage Drivers" />
     </ListItemButton>
   </Link>
   </React.Fragment>

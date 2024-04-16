@@ -9,7 +9,6 @@ import { RadioGroup, FormLabel, Radio, FormControlLabel, FormGroup } from '@mui/
 
 export default function ManageUsers() {
 
-  // State to manage users
   const [users, setUsers] = useState([]);
   const [openSignupDialog, setOpenSignupDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
