@@ -47,6 +47,7 @@ import ManageStaff from './pages/StaffManager/ManageStaff';
 import Salary from './pages/StaffManager/Salary';
 import Ratings from './pages/Driver/Ratings';
 import OrderGoods from './pages/SupplierManager/OrderGoods';
+import InventoryItems from './pages/SupplierManager/InventoryItems';
 
 
 export default function App() {
@@ -118,6 +119,7 @@ export default function App() {
             <Route path='' element={<SupplierHome />} />
             <Route path='home' element={<SupplierHome />} />
             <Route path='OrderGoods' element={<OrderGoods />} />
+            <Route path='items' element={<InventoryItems />} />
             <Route path='profile' element={<UserProfile />} />
           </Route>
 

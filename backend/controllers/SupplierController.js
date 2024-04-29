@@ -35,13 +35,15 @@ export const createSupplier = async (req, res) => {
 export const createOrder = async (req, res) => {
     const {
         sendTo,
-        description
+        item,
+        quentity
     } = req.body;
 
     try {
         const Mail = await OrderGoodsModel.create({
             sendTo,
-            description
+            item,
+            quentity
         });
 
         return res.status(201).json(Mail);
@@ -55,6 +57,10 @@ export const createOrder = async (req, res) => {
 export const getAllOrders = async (req, res) => {
     try {
         const Supplierss = await OrderGoodsModel.find()
+        .populate({
+            path: 'item',
+            model: 'items'  
+        });
 
         res.status(200).json(Supplierss);
     } catch (error) {
