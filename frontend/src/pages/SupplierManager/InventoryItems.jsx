@@ -9,33 +9,21 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import WelcomeCardInventory from '../../components/welcomeCards/WelcomeCardsInventory';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { Link } from 'react-router-dom';
 import { apiUrl } from '../../utils/Constants';
 import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
 import { jsPDF } from 'jspdf';
-import { ForkRight } from '@mui/icons-material';
 import { Check, Clear } from '@material-ui/icons';
 
-const Home = () => {
+const InventoryItems = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
   const [items, setItems] = useState([]);
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [updateFormData, setUpdateFormData] = useState({
-    _id: '',
-    itemName: '',
-    category: '',
-    quantity: '',
-    price: '',
-    img: '',
-  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -50,47 +38,6 @@ const Home = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handleDialogClose = () => {
-    setOpenUpdateDialog(false);
-  };
-
-  const handleUpdateUser = (row) => {
-    setOpenUpdateDialog(true);
-    setUpdateFormData({
-      _id: row._id,
-      itemName: row.itemName,
-      category: row.category,
-      quantity: row.quantity,
-      price: row.price,
-      img: row.img,
-    });
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const result = await authAxios.delete(`${apiUrl}/item/delete-product/${id}`);
-
-      if (result) {
-        getItems();
-        toast.warning('Product Deleted Successfully');
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  };
-
-  const handleUpdate = async () => {
-    try {
-      const result = await authAxios.put(`${apiUrl}/item/update-product/${updateFormData._id}`, updateFormData);
-      if (result) {
-        getItems();
-        toast.success('Item Updated Successfully');
-        handleDialogClose();
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  };
 
   const getItems = async () => {
     try {
@@ -170,7 +117,6 @@ const Home = () => {
 
   return (
     <Container maxWidth={'800px'}>
-      <WelcomeCardInventory />
       <Box
         sx={{
           display: 'flex',
@@ -187,9 +133,6 @@ const Home = () => {
         <IconButton sx={{ p: '10px', marginRight: 2 }} aria-label="search">
           <SearchIcon />
         </IconButton>
-        <Button variant="outlined" color="success" component={Link} to="/inventory/add-item">
-          Add Item
-        </Button>
         <Button variant="outlined" color="primary" onClick={generatePDF}>
           Generate PDF
         </Button>
@@ -206,7 +149,6 @@ const Home = () => {
                     <TableCell align="center">Quantity</TableCell>
                     <TableCell align="center">Price</TableCell>
                     <TableCell align="center">Image</TableCell>
-                    <TableCell align="center">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -233,14 +175,6 @@ const Home = () => {
                           style={{ width: '35px', height: '35px', margin: 'auto' }}
                         />
                       </TableCell>
-                      <TableCell align="center">
-                        <Button variant="outlined" sx={{ marginRight: 2 }} color="success" onClick={() => handleUpdateUser(row)}>
-                          Update
-                        </Button>
-                        <Button variant="outlined" color="error" onClick={() => handleDelete(row._id)}>
-                          Delete
-                        </Button>
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -256,73 +190,8 @@ const Home = () => {
             />
           </> : <Loader />}
       </Paper>
-
-      <Dialog open={openUpdateDialog} onClose={handleDialogClose}>
-        <DialogTitle>Update Item</DialogTitle>
-        <DialogContent>
-          <TextField
-            required
-            id="outlined-read-only-input"
-            label="Item Name"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, itemName: e.target.value })}
-            value={updateFormData.itemName}
-          />
-          <FormControl fullWidth variant="outlined">
-            <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              onChange={(e) => setUpdateFormData({ ...updateFormData, category: e.target.value })}
-              value={updateFormData.category}
-              label="Category"
-            >
-              <MenuItem value="Snacks">Snacks</MenuItem>
-              <MenuItem value="Bakery">Bakery</MenuItem>
-              <MenuItem value="Sweets">Sweets</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            required
-            id="outlined-read-only-input"
-            label="Quantity"
-            fullWidth
-            margin="normal"
-            type="number"
-            variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, quantity: e.target.value })}
-            value={updateFormData.quantity}
-          />
-          <TextField
-            required
-            id="outlined-read-only-input"
-            label="Price"
-            fullWidth
-            margin="normal"
-            type="number"
-            variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, price: e.target.value })}
-            value={updateFormData.price}
-          />
-          <TextField
-            required
-            id="outlined-read-only-input"
-            label="Image"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, img: e.target.value })}
-            value={updateFormData.img}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdate} color="primary">Save</Button>
-          <Button onClick={handleDialogClose} color="secondary">Cancel</Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 };
 
-export default Home;
+export default InventoryItems;

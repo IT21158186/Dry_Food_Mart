@@ -5,7 +5,11 @@ const OrderGoodsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
+    item: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'items'
+    },
+    quentity: {
         type: String,
         required: true,
     },

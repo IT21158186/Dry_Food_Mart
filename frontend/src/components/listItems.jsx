@@ -101,6 +101,14 @@ export const supplierListItems = (
       <ListItemText primary="Home" />
     </ListItemButton>
   </Link>
+  <Link to={'/supplier/items'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <ShoppingBag />
+      </ListItemIcon>
+      <ListItemText primary="Goods" />
+    </ListItemButton>
+  </Link>
   <Link to={'/supplier/OrderGoods'}>
     <ListItemButton>
       <ListItemIcon>

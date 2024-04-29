@@ -99,6 +99,7 @@ export const getAllUsers = async(req,res)=>{
 export const sendNewEmail = async (req,res)=>{
     try{
         const data = req.body
+        console.log(data);
         if(!data.sendTo || !data.description || !data.subject){
             throw Error ('All fields must be fillded..')
         }
