@@ -59,6 +59,7 @@ const OrderGoods = () => {
                 const result2 = await authAxios.post(`${apiUrl}/user/send-email`, mailData);
                 if (result2) {
                     const newQty = parseInt(formData.item.quantity) + parseInt(formData.quentity);
+                    // Update quantity
                     const result3 = await authAxios.put(`${apiUrl}/item/update-product/${formData.item._id}`, { quantity: newQty });
                     if (result3) {
                         toast.success("Request sent successfully");
