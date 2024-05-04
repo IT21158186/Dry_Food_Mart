@@ -11,7 +11,6 @@ import jsPDF from 'jspdf';
 import { DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 
-
 export default function Salary() {
   const [salaries, setSalaries] = useState([]);
   const [users, setUsers] = useState([]);
@@ -121,7 +120,7 @@ export default function Salary() {
     try {
       const result = await authAxios.put(`${apiUrl}/salary/${updateFormData._id}`, updateFormData);
       if (result) {
-        fetchSalaries();
+        fetchSalaries(); // Reload data after successful update
         toast.success('Updated Successfully');
         handleDialogClose();
       }
@@ -129,6 +128,7 @@ export default function Salary() {
       toast.error(error.response.data.message);
     }
   };
+  
 
   const handleDelete = async (id) => {
     try {
@@ -160,6 +160,17 @@ export default function Salary() {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
+  const handleCreateNumberInput = (field, value) => {
+    if (!isNaN(value)) {
+      setFormData((prevData) => ({ ...prevData, [field]: value }));
+    }
+  };
+
+  const handleUpdateFormData = (field, value) => {
+    if (!isNaN(value)) {
+      setUpdateFormData((prevData) => ({ ...prevData, [field]: value }));
+    }
+  };
 
   return (
     <div className="flex flex-col items-center">
@@ -186,7 +197,7 @@ export default function Salary() {
             label="Basic"
             type="number"
             value={formData.basic}
-            onChange={(e) => handleCreate('basic', e.target.value)}
+            onChange={(e) => handleCreateNumberInput('basic', e.target.value)}
             fullWidth
             margin="normal"
           />
@@ -194,7 +205,7 @@ export default function Salary() {
             label="Attendance Allowance"
             type="number"
             value={formData.attendanceAllowance}
-            onChange={(e) => handleCreate('attendanceAllowance', e.target.value)}
+            onChange={(e) => handleCreateNumberInput('attendanceAllowance', e.target.value)}
             fullWidth
             margin="normal"
           />
@@ -202,7 +213,7 @@ export default function Salary() {
             label="Fuel Allowance"
             type="number"
             value={formData.fuelAllowance}
-            onChange={(e) => handleCreate('fuelAllowance', e.target.value)}
+            onChange={(e) => handleCreateNumberInput('fuelAllowance', e.target.value)}
             fullWidth
             margin="normal"
           />
@@ -210,7 +221,7 @@ export default function Salary() {
             label="Overtime"
             type="number"
             value={formData.overtime}
-            onChange={(e) => handleCreate('overtime', e.target.value)}
+            onChange={(e) => handleCreateNumberInput('overtime', e.target.value)}
             fullWidth
             margin="normal"
           />
@@ -259,7 +270,7 @@ export default function Salary() {
             fullWidth
             margin="normal"
             variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, basic: e.target.value })}
+            onChange={(e) => handleUpdateFormData('basic', e.target.value)}
             value={updateFormData.basic}
           />
           <TextField
@@ -269,7 +280,7 @@ export default function Salary() {
             fullWidth
             margin="normal"
             variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, attendanceAllowance: e.target.value })}
+            onChange={(e) => handleUpdateFormData('attendanceAllowance', e.target.value)}
             value={updateFormData.attendanceAllowance}
           />
           <TextField
@@ -279,7 +290,7 @@ export default function Salary() {
             fullWidth
             margin="normal"
             variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, fuelAllowance: e.target.value })}
+            onChange={(e) => handleUpdateFormData('fuelAllowance', e.target.value)}
             value={updateFormData.fuelAllowance}
           />
           <TextField
@@ -289,7 +300,7 @@ export default function Salary() {
             fullWidth
             margin="normal"
             variant="outlined"
-            onChange={(e) => setUpdateFormData({ ...updateFormData, overtime: e.target.value })}
+            onChange={(e) => handleUpdateFormData('overtime', e.target.value)}
             value={updateFormData.overtime}
           />
         </DialogContent>

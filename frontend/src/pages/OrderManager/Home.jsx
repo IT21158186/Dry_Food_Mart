@@ -103,7 +103,7 @@ const Home = () => {
     }
   };
 
-  const [regUsers] = useState(100); // Example value
+  const [regUsers] = useState(28); // Example value
   const [staff] = useState(20); // Example value
   const currentDate = format(new Date(), 'MMMM dd, yyyy');
 
@@ -218,7 +218,7 @@ const Home = () => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{row.userId.firstName} {row.userId.lastName}</TableCell>
+                    <TableCell align="center">{row.userId ? `${row.userId.firstName} ${row.userId.lastName}` : 'Unknown'}</TableCell>
                     <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
                     <TableCell align="center">{row.price}</TableCell>
                     <TableCell align="center" onClick={() => { handleClickOpen(row) }} className="cursor-pointer"><Visibility /></TableCell>
@@ -234,46 +234,8 @@ const Home = () => {
                         <ToggleButton value="active" color="success">Active</ToggleButton>
                       </ToggleButtonGroup>
                     </TableCell>
-                    <TableCell align="center" onClick={() => {removeOrder(row._id)}} className="cursor-pointer"> <Delete color="error" /></TableCell>
-
-
-                    <Dialog
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="alert-dialog-title"
-                      aria-describedby="alert-dialog-description"
-                      PaperProps={{
-                        style: {
-                          width: '33%',
-                          minWidth: '200px',
-                          maxWidth: '500px',
-                        },
-                      }}
-                    >
-                      <DialogTitle id="alert-dialog-title">
-                        {"View Payment Details"}
-                      </DialogTitle>
-                      <DialogContent>
-
-                        <Typography component="legend">Email</Typography>
-                        <TextField fullWidth value={payment.email} id="email" disabled />
-
-                        <Typography component="legend">Name</Typography>
-                        <TextField fullWidth value={payment.name} id="name" disabled />
-
-                        <Typography component="legend">Card Number</Typography>
-                        <TextField fullWidth value={payment.cardNo} id="cardNo" disabled />
-
-                      </DialogContent>
-
-                      <DialogActions>
-                        <Button onClick={handleClose} autoFocus>
-                          Cancel
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
+                    <TableCell align="center" onClick={() => { removeOrder(row._id) }} className="cursor-pointer"> <Delete color="error" /></TableCell>
                   </TableRow>
-
                 ))}
               </TableBody>
             </Table>
