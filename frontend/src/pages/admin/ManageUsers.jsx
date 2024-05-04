@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material'; // Import MUI components
-import { Delete } from '@mui/icons-material'; // Import MUI Delete icon
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { apiUrl } from '../../utils/Constants';
 import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
-import { RadioGroup, FormLabel, Radio, FormControlLabel, FormGroup } from '@mui/material';
 import jsPDF from 'jspdf';
 
 export default function ManageUsers() {
@@ -31,6 +30,8 @@ export default function ManageUsers() {
     contactNo: '',
   });
 
+  const [formErrors, setFormErrors] = useState({});
+
   const handleUpdateUser = (row) => {
     setOpenUpdateDialog(true);
     setUpdateFormData({
@@ -42,7 +43,6 @@ export default function ManageUsers() {
     });
   };
 
-  // Function to handle opening dialog for signup
   const handleSignupDialogOpen = () => {
     setOpenSignupDialog(true);
   };
@@ -51,12 +51,10 @@ export default function ManageUsers() {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  // Use this function to handle changes in checkboxes
   const handleCheckboxChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  // Function to handle closing dialogs
   const handleDialogClose = () => {
     setOpenSignupDialog(false);
     setOpenUpdateDialog(false);
@@ -67,23 +65,20 @@ export default function ManageUsers() {
       password: '',
       contactNo: '',
     });
+    setFormErrors({});
   };
 
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
-    // Header
     const header = [['First Name', 'Last Name', 'Email', 'Contact No', 'Role']];
-    // Data
-    const data = users.map((users, index) => [
-      users.firstName,
-      users.lastName,
-      users.email,
-      users.contactNo,
+    const data = users.map((user, index) => [
+      user.firstName,
+      user.lastName,
+      user.email,
+      user.contactNo,
     ]);
-    // Set font size and align center in width
     doc.setFontSize(12);
     doc.text("Users Details", doc.internal.pageSize.width / 2, 10, { align: 'center' });
-    // Add header and data to the table
     doc.autoTable({
       head: header,
       body: data,
@@ -95,6 +90,9 @@ export default function ManageUsers() {
   }
 
   const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
     try {
       const result = await authAxios.post(`${apiUrl}/user/create`, formData);
       if (result) {
@@ -103,12 +101,48 @@ export default function ManageUsers() {
       getUsers();
       setOpenSignupDialog(false);
     } catch (error) {
-      //console.log(error);
       toast.error(error.response.data.message);
     }
   };
 
+  const validateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    if (!formData.firstName) {
+      errors.firstName = 'First name is required';
+      isValid = false;
+    }
+
+    if (!formData.lastName) {
+      errors.lastName = 'Last name is required';
+      isValid = false;
+    }
+
+    if (!formData.email) {
+      errors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Email is invalid';
+      isValid = false;
+    }
+
+    if (!formData.contactNo) {
+      errors.contactNo = 'Contact number is required';
+      isValid = false;
+    } else if (!/^\d{10}$/.test(formData.contactNo)) {
+      errors.contactNo = 'Contact number must be 10 digits';
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleUpdate = async () => {
+    if (!validateUpdateForm()) {
+      return;
+    }
     try {
       const result = await authAxios.put(`${apiUrl}/user/update-account/${updateFormData._id}`, updateFormData);
       if (result) {
@@ -119,6 +153,40 @@ export default function ManageUsers() {
     } catch (error) {
       toast.error(error.response.data.message);
     }
+  };
+
+  const validateUpdateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    if (!updateFormData.firstName) {
+      errors.firstName = 'First name is required';
+      isValid = false;
+    }
+
+    if (!updateFormData.lastName) {
+      errors.lastName = 'Last name is required';
+      isValid = false;
+    }
+
+    if (!updateFormData.email) {
+      errors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(updateFormData.email)) {
+      errors.email = 'Email is invalid';
+      isValid = false;
+    }
+
+    if (!updateFormData.contactNo) {
+      errors.contactNo = 'Contact number is required';
+      isValid = false;
+    } else if (!/^\d{9}$/.test(updateFormData.contactNo)) {
+      errors.contactNo = 'Contact number must be 9 digits';
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
   };
 
   const handleDeleteUser = async (id) => {
@@ -184,7 +252,7 @@ export default function ManageUsers() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.filter(user => user.role == 'customer').map(user => (
+                {users.filter(user => user.role === 'customer').map(user => (
                   <TableRow key={user._id}>
                     <TableCell>{user.firstName}</TableCell>
                     <TableCell>{user.lastName}</TableCell>
@@ -201,15 +269,14 @@ export default function ManageUsers() {
             </Table>
           </TableContainer>
         </> : <Loader />}
-      {/* Signup Dialog */}
       <Dialog open={openSignupDialog} onClose={handleDialogClose}>
         <DialogTitle>Add New User</DialogTitle>
         <DialogContent>
           <form>
-            <TextField required label="First Name" margin="normal" name="firstName" value={formData.firstName} onChange={(e) => handleCreateUser('firstName', e.target.value)} fullWidth />
-            <TextField required label="Last Name" margin="normal" name="lastName" value={formData.lastName} onChange={(e) => handleCreateUser('lastName', e.target.value)} fullWidth />
-            <TextField required label="Contact No" margin="normal" name="contactNo" value={formData.contactNo} onChange={(e) => handleCreateUser('contactNo', e.target.value)} fullWidth />
-            <TextField required label="Email" margin="normal" name="email" value={formData.email} onChange={(e) => handleCreateUser('email', e.target.value)} fullWidth />
+            <TextField required label="First Name" margin="normal" name="firstName" value={formData.firstName} onChange={(e) => handleCreateUser('firstName', e.target.value)} fullWidth error={!!formErrors.firstName} helperText={formErrors.firstName} />
+            <TextField required label="Last Name" margin="normal" name="lastName" value={formData.lastName} onChange={(e) => handleCreateUser('lastName', e.target.value)} fullWidth error={!!formErrors.lastName} helperText={formErrors.lastName} />
+            <TextField required label="Contact No" margin="normal" name="contactNo" value={formData.contactNo} onChange={(e) => handleCreateUser('contactNo', e.target.value)} fullWidth error={!!formErrors.contactNo} helperText={formErrors.contactNo} />
+            <TextField required label="Email" margin="normal" name="email" value={formData.email} onChange={(e) => handleCreateUser('email', e.target.value)} fullWidth error={!!formErrors.email} helperText={formErrors.email} />
             <TextField required label="Password" margin="normal" name="password" value={formData.password} onChange={(e) => handleCreateUser('password', e.target.value)} fullWidth />
           </form>
         </DialogContent>
@@ -218,7 +285,6 @@ export default function ManageUsers() {
           <Button onClick={handleDialogClose} color="secondary">Cancel</Button>
         </DialogActions>
       </Dialog>
-      {/* Update Dialog */}
       <Dialog open={openUpdateDialog} onClose={handleDialogClose}>
         <DialogTitle>Update User</DialogTitle>
         <DialogContent>
@@ -231,6 +297,8 @@ export default function ManageUsers() {
             variant="outlined"
             onChange={(e) => setUpdateFormData({ ...updateFormData, firstName: e.target.value })}
             value={updateFormData.firstName}
+            error={!!formErrors.firstName}
+            helperText={formErrors.firstName}
           />
           <TextField
             required
@@ -241,6 +309,8 @@ export default function ManageUsers() {
             variant="outlined"
             onChange={(e) => setUpdateFormData({ ...updateFormData, lastName: e.target.value })}
             value={updateFormData.lastName}
+            error={!!formErrors.lastName}
+            helperText={formErrors.lastName}
           />
           <TextField
             required
@@ -251,6 +321,8 @@ export default function ManageUsers() {
             variant="outlined"
             onChange={(e) => setUpdateFormData({ ...updateFormData, contactNo: e.target.value })}
             value={updateFormData.contactNo}
+            error={!!formErrors.contactNo}
+            helperText={formErrors.contactNo}
           />
           <TextField
             required
@@ -261,6 +333,8 @@ export default function ManageUsers() {
             variant="outlined"
             onChange={(e) => setUpdateFormData({ ...updateFormData, email: e.target.value })}
             value={updateFormData.email}
+            error={!!formErrors.email}
+            helperText={formErrors.email}
           />
         </DialogContent>
         <DialogActions>
