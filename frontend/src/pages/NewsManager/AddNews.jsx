@@ -16,6 +16,18 @@ export default function AddNews() {
 
   const handleSubmit = async () => {
     try {
+      // Basic form validation
+      if (!formData.title || !formData.description || !formData.img) {
+        toast.error("Please fill in all fields.");
+        return;
+      }
+
+      // Image URL validation
+      if (!isValidUrl(formData.img)) {
+        toast.error("Please enter a valid image URL.");
+        return;
+      }
+
       const result = await authAxios.post(`${apiUrl}/news`, formData);
       if (result) {
         toast.success(result.data.message);
@@ -25,6 +37,16 @@ export default function AddNews() {
     } catch (error) {
       //console.log(error);
       toast.error(error.response.data.message);
+    }
+  };
+
+  // Function to validate URL
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (error) {
+      return false;
     }
   };
 
