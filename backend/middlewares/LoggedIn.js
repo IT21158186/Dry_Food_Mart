@@ -16,7 +16,7 @@ export const LoginValidator = (req, res, next) => {
       next();
     } else {
       // Handle the case where the Authorization header is missing
-      res.status(401).json({ message: 'Unauthorized: Token is Missing, Please Login Again' });
+      res.status(401).json({ message: 'Please Login' });
     }
   }
   

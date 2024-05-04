@@ -169,7 +169,7 @@ const Home = () => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{row.userId.firstName} {row.userId.lastName}</TableCell>
+                    <TableCell align="center">{row.userId ? `${row.userId.firstName} ${row.userId.lastName}` : 'N/A'}</TableCell>
                     <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
                     <TableCell align="center">{row.address}</TableCell>
                     <TableCell align="center" onClick={() => { handleClickOpen(row) }} className="cursor-pointer">
