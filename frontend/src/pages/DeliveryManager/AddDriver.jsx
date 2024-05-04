@@ -5,7 +5,6 @@ import { apiUrl } from '../../utils/Constants';
 import authAxios from '../../utils/authAxios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader';
-import { RadioGroup, FormLabel, Radio, FormControlLabel, FormGroup } from '@mui/material';
 
 export default function AddDriver() {
 
@@ -68,8 +67,46 @@ export default function AddDriver() {
     });
   };
 
+  // Function to validate the form before submission
+  const validateForm = () => {
+    // Check if required fields are empty
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.contactNo) {
+      toast.error('Please fill in all required fields.');
+      return false;
+    }
+
+    // Check if email format is valid
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address.');
+      return false;
+    }
+
+    // Check if contact number format is valid (assuming a simple 10-digit number)
+    const contactNoRegex = /^\d{10}$/;
+    if (!contactNoRegex.test(formData.contactNo)) {
+      toast.error('Please enter a valid 10-digit contact number.');
+      return false;
+    }
+
+    // Check if password meets minimum length requirement (You can adjust this as needed)
+    if (formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters long.');
+      return false;
+    }
+
+    // Additional validations if needed
+
+    return true;
+  };
+
   const handleSubmit = async () => {
     try {
+      // Validate the form before submitting
+      if (!validateForm()) {
+        return;
+      }
+
       const result = await authAxios.post(`${apiUrl}/user/create`, formData);
       if (result) {
         toast.success('Driver Account created successfully!');
@@ -84,6 +121,11 @@ export default function AddDriver() {
 
   const handleUpdate = async () => {
     try {
+      // Validate the form before updating
+      if (!validateForm()) {
+        return;
+      }
+
       const result = await authAxios.put(`${apiUrl}/user/update-account/${updateFormData._id}`, updateFormData);
       if (result) {
         getUsers();
@@ -129,7 +171,6 @@ export default function AddDriver() {
       }
     }
   };
-  
 
   useEffect(() => {
     getUsers();
@@ -157,7 +198,7 @@ export default function AddDriver() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.filter(user => user.role == 'driver').map(user => (
+                {users.filter(user => user.role === 'driver').map(user => (
                   <TableRow key={user._id}>
                     <TableCell>{user.firstName}</TableCell>
                     <TableCell>{user.lastName}</TableCell>
@@ -183,7 +224,7 @@ export default function AddDriver() {
             <TextField required label="Last Name" margin="normal" name="lastName" value={formData.lastName} onChange={(e) => handleCreateUser('lastName', e.target.value)} fullWidth />
             <TextField required label="Contact No" margin="normal" name="contactNo" value={formData.contactNo} onChange={(e) => handleCreateUser('contactNo', e.target.value)} fullWidth />
             <TextField required label="Email" margin="normal" name="email" value={formData.email} onChange={(e) => handleCreateUser('email', e.target.value)} fullWidth />
-            <TextField required label="Password" margin="normal" name="password" value={formData.password} onChange={(e) => handleCreateUser('password', e.target.value)} fullWidth />
+            <TextField required type="password" label="Password" margin="normal" name="password" value={formData.password} onChange={(e) => handleCreateUser('password', e.target.value)} fullWidth />
           </form>
         </DialogContent>
         <DialogActions>
