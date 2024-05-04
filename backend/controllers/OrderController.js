@@ -1,4 +1,5 @@
 import CartModel from "../models/CartModel.js";
+import ItemModel from "../models/ItemModel.js";
 import OrderModel from "../models/OrderModel.js";
 import PaymentModel from "../models/PaymentModel.js";
 
@@ -17,7 +18,17 @@ export const createOrder = async (req, res) => {
     } = req.body;
     const userId = req.loggedInId;
     try {
+        if (items?.length < 1) {
+            throw Error('items array is required for create orders')
+        }
+        const updateQtyPromises = items.map(async (it) => {
+            const item = await ItemModel.findById(it);
+            item.quantity -= 1;
+            await item.save()
 
+        })
+
+        const isQuntityUpdated =await Promise.all(updateQtyPromises)
         const newPayment = await PaymentModel.create({
             userId,
             price,
@@ -38,10 +49,10 @@ export const createOrder = async (req, res) => {
             address
         });
 
-        return res.status(201).json("Order Complete", newOrder , newPayment);
+        return res.status(201).json("Order Complete", newOrder, newPayment);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: error.message });
     }
 };
 

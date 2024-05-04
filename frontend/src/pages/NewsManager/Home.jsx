@@ -60,8 +60,6 @@ const Home = () => {
       _id: row._id,
       title: row.title,
       description: row.description,
-      quantity: row.quantity,
-      price: row.price,
       img: row.img,
     });
   };
@@ -81,6 +79,18 @@ const Home = () => {
 
   const handleUpdate = async () => {
     try {
+      // Basic form validation
+      if (!updateFormData.title || !updateFormData.description || !updateFormData.img) {
+        toast.error("Please fill in all fields.");
+        return;
+      }
+
+      // Image URL validation
+      if (!isValidUrl(updateFormData.img)) {
+        toast.error("Please enter a valid image URL.");
+        return;
+      }
+
       const result = await authAxios.put(`${apiUrl}/news/${updateFormData._id}`, updateFormData);
       if (result) {
         getItems();
@@ -115,6 +125,16 @@ const Home = () => {
   const filteredItems = items.filter(item =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Function to validate URL
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 
 
   const handleGeneratePdf = () => {
@@ -244,7 +264,7 @@ const Home = () => {
           <TextField
             required
             id="outlined-read-only-input"
-            label="description"
+            label="Description"
             fullWidth
             multiline
             rows={4}
