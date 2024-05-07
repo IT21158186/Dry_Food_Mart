@@ -101,7 +101,7 @@ const Home = () => {
     ]);
     // Set font size and align center in width
     doc.setFontSize(12);
-    doc.text("Users Details", doc.internal.pageSize.width / 2, 10, { align: 'center' });
+    doc.text("Delivery Details", doc.internal.pageSize.width / 2, 10, { align: 'center' });
     // Add header and data to the table
     doc.autoTable({
       head: header,
