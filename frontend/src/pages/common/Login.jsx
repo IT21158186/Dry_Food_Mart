@@ -37,19 +37,19 @@ export default function Login() {
 
         switch (isLoggedin.data.userRole) {
           case 'admin': //store
-            toast.success('Login Success as an admin')
+            toast.success('Login Success as the admin')
             navigate('/admin/home');
             break;
           case 'inventory': //store
-            toast.success('Login Success as an Inventory Manager')
+            toast.success('Login Success as the Inventory Manager')
             navigate('/inventory/home');
             break;
           case 'order': //store
-            toast.success('Login Success as an Order Manager')
+            toast.success('Login Success as the Order Manager')
             navigate('/order/home');
             break;
           case 'supplier': //store
-            toast.success('Login Success as an Supplier Manager')
+            toast.success('Login Success as the Supplier Manager')
             navigate('/supplier/home');
             break;
           case 'customer': //customer
@@ -57,20 +57,24 @@ export default function Login() {
             navigate('/customer/home');
             break;
           case 'news': //news
-            toast.success('Login Success as a News Manager')
+            toast.success('Login Success as the News Manager')
             navigate('/news/home');
             break;
           case 'delivery': //delivery
-            toast.success('Login Success as a Delivery Manager')
+            toast.success('Login Success as the Delivery Manager')
             navigate('/delivery/home');
             break;
-          case 'staff': //delivery
-            toast.success('Login Success as a Staff Manager')
+          case 'staff': //staff
+            toast.success('Login Success as the Staff Manager')
             navigate('/staff/home');
             break;
-          case 'driver': //delivery
+          case 'driver': //driver
             toast.success('Login Success as a Driver')
             navigate('/driver/home');
+            break;
+          case 'feedback': //feedback
+            toast.success('Login Success as the Feedback Manager')
+            navigate('/feedback/home');
             break;
         }
         window.location.reload();

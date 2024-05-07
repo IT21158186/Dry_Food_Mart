@@ -20,7 +20,7 @@ import authAxios from '../../utils/authAxios';
 import { apiUrl } from '../../utils/Constants';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
-import { deliveryListItems, adminListItems, customerListItems, guestListItems, inventoryListItems, newsListItems, orderListItems, supplierListItems, driverListItems, staffListItems } from '../../components/listItems';
+import { deliveryListItems, feedbackListItems, adminListItems, customerListItems, guestListItems, inventoryListItems, newsListItems, orderListItems, supplierListItems, driverListItems, staffListItems } from '../../components/listItems';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
@@ -196,6 +196,13 @@ export default function Dashboard() {
           setAuth(true);
         }
         setNavlinks(staffListItems);
+        break;
+      case "feedback": //feedback
+        if (userAPI != null) {
+          setuserAPI('feedback')
+          setAuth(true);
+        }
+        setNavlinks(feedbackListItems);
         break;
       default:
         setNavlinks(guestListItems)

@@ -159,6 +159,8 @@ export const newsListItems = (
   </React.Fragment>
 );
 
+
+
 export const deliveryListItems = (
   <React.Fragment>
   <Link to={'/delivery'}>
@@ -196,6 +198,20 @@ export const staffListItems = (
         <Payment />
       </ListItemIcon>
       <ListItemText primary="Salary" />
+    </ListItemButton>
+  </Link>
+  </React.Fragment>
+);
+
+
+export const feedbackListItems = (
+  <React.Fragment>
+  <Link to={'/feedback/home'}>
+    <ListItemButton>
+      <ListItemIcon>
+        <Home />
+      </ListItemIcon>
+      <ListItemText primary="Feedback Home" />
     </ListItemButton>
   </Link>
   </React.Fragment>
